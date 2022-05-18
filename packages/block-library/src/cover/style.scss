@@ -10,6 +10,7 @@
 	padding: 1em;
 	// This block has customizable padding, border-box makes that more predictable.
 	box-sizing: border-box;
+	overflow: hidden;
 
 	/**
 	 * Set a default background color for has-background-dim _unless_ it includes another
