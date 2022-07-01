@@ -1797,6 +1797,7 @@ const getItemFromVariation = ( state, item ) => ( variation ) => {
 		innerBlocks: variation.innerBlocks,
 		keywords: variation.keywords || item.keywords,
 		frecency: calculateFrecency( time, count ),
+		inserterItem: variation.inserterItem,
 	};
 };
 
@@ -1880,6 +1881,7 @@ const buildBlockTypeItem =
 			variations: inserterVariations,
 			example: blockType.example,
 			utility: 1, // Deprecated.
+			inserterItem: blockType.inserterItem,
 		};
 	};
 
@@ -1997,6 +1999,7 @@ export const getInserterItems = createSelector(
 
 		const items = blockTypeInserterItems.reduce( ( accumulator, item ) => {
 			const { variations = [] } = item;
+
 			// Exclude any block type item that is to be replaced by a default variation.
 			if ( ! variations.some( ( { isDefault } ) => isDefault ) ) {
 				accumulator.push( item );
@@ -2005,6 +2008,7 @@ export const getInserterItems = createSelector(
 				const variationMapper = getItemFromVariation( state, item );
 				accumulator.push( ...variations.map( variationMapper ) );
 			}
+
 			return accumulator;
 		}, [] );
 
