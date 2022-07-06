@@ -44,9 +44,12 @@
 		& > .edit-post-header__settings > .block-editor-post-preview__dropdown,
 		& > .edit-post-header__settings > .editor-post-preview,
 		& > .edit-post-header__settings > .editor-post-switch-to-draft,
-		& > .edit-post-header__settings > .interface-pinned-items,
 		& > .edit-post-header__toolbar {
 			visibility: hidden;
+		}
+
+		& > .edit-post-header__settings > .interface-pinned-items {
+			display: none;
 		}
 
 		& > .edit-post-header__settings > .editor-post-publish-button,
