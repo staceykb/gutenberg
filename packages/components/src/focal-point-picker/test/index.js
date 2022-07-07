@@ -104,7 +104,7 @@ describe( 'FocalPointPicker', () => {
 			// Focus and press arrow up
 			const dragArea = getByRole( 'button' );
 			dragArea.focus();
-			fireEvent.keyDown( dragArea, { charCode: 0, keyCode: 38 } );
+			fireEvent.keyDown( dragArea, { key: 'ArrowUp' } );
 			expect( spyChange ).toHaveBeenCalledWith( {
 				x: '0.14',
 				y: '0.61',

@@ -12,7 +12,6 @@ import {
 	__experimentalUseDragging as useDragging,
 	useInstanceId,
 } from '@wordpress/compose';
-import { UP, DOWN, LEFT, RIGHT } from '@wordpress/keycodes';
 
 /**
  * Internal dependencies
@@ -27,6 +26,8 @@ import {
 	MediaContainer,
 } from './styles/focal-point-picker-style';
 import { INITIAL_BOUNDS } from './utils';
+
+const arrowKeyList = [ 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp' ];
 
 export default function FocalPointPicker( {
 	autoPlay = true,
@@ -126,14 +127,15 @@ export default function FocalPointPicker( {
 	};
 
 	const arrowKeyStep = ( event ) => {
-		const { keyCode, shiftKey } = event;
-		if ( ! [ UP, DOWN, LEFT, RIGHT ].includes( keyCode ) ) return;
+		const { key, shiftKey } = event;
+		if ( ! arrowKeyList.includes( key ) ) return;
 
 		event.preventDefault();
 		const value = { x, y };
 		const step = shiftKey ? 0.1 : 0.01;
-		const delta = keyCode === UP || keyCode === LEFT ? -1 * step : step;
-		const axis = keyCode === UP || keyCode === DOWN ? 'y' : 'x';
+		const delta =
+			key === 'ArrowUp' || key === 'ArrowLeft' ? -1 * step : step;
+		const axis = key === 'ArrowUp' || key === 'ArrowDown' ? 'y' : 'x';
 		value[ axis ] = parseFloat( value[ axis ] ) + delta;
 		sendPoint( getFinalValue( value ) );
 	};
