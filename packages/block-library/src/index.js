@@ -2,7 +2,6 @@
  * WordPress dependencies
  */
 import {
-	registerBlockType,
 	setDefaultBlockName,
 	setFreeformContentHandlerName,
 	setUnregisteredTypeHandlerName,
@@ -116,21 +115,8 @@ import * as textColumns from './text-columns';
 import * as verse from './verse';
 import * as video from './video';
 
-import isBlockMetadataExperimental from './is-block-metadata-experimental';
-
-/**
- * Function to register an individual block.
- *
- * @param {Object} block The block to be registered.
- *
- */
-const registerBlock = ( block ) => {
-	if ( ! block ) {
-		return;
-	}
-	const { metadata, settings, name } = block;
-	registerBlockType( { name, ...metadata }, settings );
-};
+import initBlock from './utils/init-block';
+import isBlockMetadataExperimental from './utils/is-block-metadata-experimental';
 
 /**
  * Function to get all the block-library blocks in an array
@@ -268,7 +254,7 @@ export const __experimentalGetCoreBlocks = () =>
 export const registerCoreBlocks = (
 	blocks = __experimentalGetCoreBlocks()
 ) => {
-	blocks.forEach( registerBlock );
+	blocks.forEach( initBlock );
 
 	setDefaultBlockName( paragraph.name );
 	if ( window.wp && window.wp.oldEditor ) {
@@ -305,6 +291,6 @@ export const __experimentalRegisterExperimentalCoreBlocks = process.env
 						__experimental === true ||
 						enabledExperiments.includes( __experimental )
 				)
-				.forEach( registerBlock );
+				.forEach( initBlock );
 	  }
 	: undefined;
