@@ -39,7 +39,10 @@ export function getExtension( filename = '' ) {
  */
 export function isVideoType( filename = '' ) {
 	if ( ! filename ) return false;
-	return VIDEO_EXTENSIONS.includes( getExtension( filename ) );
+	return (
+		filename.startsWith( 'data:video/' ) ||
+		VIDEO_EXTENSIONS.includes( getExtension( filename ) )
+	);
 }
 
 /**
