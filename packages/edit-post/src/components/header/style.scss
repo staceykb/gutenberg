@@ -42,7 +42,6 @@
 
 		// hide some parts
 		& > .edit-post-header__settings > .editor-post-preview,
-		& > .edit-post-header__settings > .editor-post-switch-to-draft,
 		& > .edit-post-header__toolbar {
 			visibility: hidden;
 		}
@@ -57,6 +56,8 @@
 
 		& > .edit-post-header__settings > .editor-post-publish-button,
 		& > .edit-post-header__settings > .editor-post-saved-state,
+		& > .edit-post-header__settings > .editor-post-save-draft,
+		& > .edit-post-header__settings > .editor-post-switch-to-draft,
 		& > .edit-post-header__settings > .editor-post-publish-panel__toggle,
 		& > .edit-post-header__settings .interface-more-menu-dropdown {
 			position: relative;
@@ -79,6 +80,8 @@
 			// show the publish button and the more button
 			> .edit-post-header__settings > .editor-post-publish-button,
 			& > .edit-post-header__settings > .editor-post-saved-state,
+			& > .edit-post-header__settings > .editor-post-save-draft,
+			& > .edit-post-header__settings > .editor-post-switch-to-draft,
 			> .edit-post-header__settings > .editor-post-publish-panel__toggle,
 			> .edit-post-header__settings .interface-more-menu-dropdown {
 				position: relative;
