@@ -14,6 +14,7 @@ function gutenberg_reregister_core_block_types() {
 	$blocks_dirs = array(
 		__DIR__ . '/../build/block-library/blocks/' => array(
 			'block_folders' => array(
+				'archives',
 				'audio',
 				'button',
 				'buttons',
@@ -45,7 +46,6 @@ function gutenberg_reregister_core_block_types() {
 				'embed',
 			),
 			'block_names'   => array(
-				'archives.php'                     => 'core/archives',
 				'avatar.php'                       => 'core/avatar',
 				'block.php'                        => 'core/block',
 				'calendar.php'                     => 'core/calendar',
