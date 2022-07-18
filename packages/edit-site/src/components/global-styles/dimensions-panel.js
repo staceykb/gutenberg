@@ -85,6 +85,25 @@ function splitStyleValue( value ) {
 	return value;
 }
 
+function splitGapValue( value ) {
+	// Check for shorthand value ( a string value ).
+	if ( value && typeof value === 'string' ) {
+		// Convert to value for individual sides for BoxControl.
+		return {
+			top: value,
+			right: value,
+			bottom: value,
+			left: value,
+		};
+	}
+
+	return {
+		...value,
+		right: value?.left,
+		bottom: value?.top,
+	};
+}
+
 export default function DimensionsPanel( { name } ) {
 	const showPaddingControl = useHasPadding( name );
 	const showMarginControl = useHasMargin( name );
@@ -130,6 +149,19 @@ export default function DimensionsPanel( { name } ) {
 		!! marginValues && Object.keys( marginValues ).length;
 
 	const [ gapValue, setGapValue ] = useStyle( 'spacing.blockGap', name );
+	const boxControlGapValue = splitGapValue( gapValue );
+	const setBoxControlGapValue = ( nextBoxGapValue ) => {
+		if ( ! nextBoxGapValue ) {
+			setGapValue( null );
+		}
+		setGapValue( {
+			top: nextBoxGapValue?.top,
+			left: nextBoxGapValue?.left,
+		} );
+	};
+	const gapSides = useCustomSides( name, 'blockGap' );
+	const isAxialGap =
+		gapSides && gapSides.some( ( side ) => AXIAL_SIDES.includes( side ) );
 	const resetGapValue = () => setGapValue( undefined );
 	const hasGapValue = () => !! gapValue;
 
@@ -184,14 +216,27 @@ export default function DimensionsPanel( { name } ) {
 					onDeselect={ resetGapValue }
 					isShownByDefault={ true }
 				>
-					<UnitControl
-						label={ __( 'Block spacing' ) }
-						__unstableInputWidth="80px"
-						min={ 0 }
-						onChange={ setGapValue }
-						units={ units }
-						value={ gapValue }
-					/>
+					{ isAxialGap ? (
+						<BoxControl
+							label={ __( 'Block spacing' ) }
+							min={ 0 }
+							onChange={ setBoxControlGapValue }
+							units={ units }
+							sides={ gapSides }
+							values={ boxControlGapValue }
+							allowReset={ false }
+							splitOnAxis={ true }
+						/>
+					) : (
+						<UnitControl
+							label={ __( 'Block spacing' ) }
+							__unstableInputWidth="80px"
+							min={ 0 }
+							onChange={ setGapValue }
+							units={ units }
+							value={ gapValue }
+						/>
+					) }
 				</ToolsPanelItem>
 			) }
 		</ToolsPanel>
