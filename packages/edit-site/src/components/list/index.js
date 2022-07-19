@@ -7,7 +7,7 @@ import classnames from 'classnames';
  * WordPress dependencies
  */
 import { store as coreStore } from '@wordpress/core-data';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { InterfaceSkeleton } from '@wordpress/interface';
 import { __, sprintf } from '@wordpress/i18n';
 import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
@@ -31,8 +31,8 @@ export default function List() {
 
 	useRegisterShortcuts();
 
-	const { previousShortcut, nextShortcut, isNavigationOpen } = useSelect(
-		( select ) => {
+	const { previousShortcut, nextShortcut, isNavigationOpen } =
+		useSuspenseSelect( ( select ) => {
 			return {
 				previousShortcut: select(
 					keyboardShortcutsStore
@@ -44,11 +44,9 @@ export default function List() {
 				).getAllShortcutKeyCombinations( 'core/edit-site/next-region' ),
 				isNavigationOpen: select( editSiteStore ).isNavigationOpened(),
 			};
-		},
-		[]
-	);
+		}, [] );
 
-	const postType = useSelect(
+	const postType = useSuspenseSelect(
 		( select ) => select( coreStore ).getPostType( templateType ),
 		[ templateType ]
 	);

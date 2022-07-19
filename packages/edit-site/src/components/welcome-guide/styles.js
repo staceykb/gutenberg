@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useDispatch, useSuspenseSelect } from '@wordpress/data';
 import { ExternalLink, Guide } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { store as interfaceStore } from '@wordpress/interface';
@@ -16,7 +16,7 @@ import { store as editSiteStore } from '../../store';
 export default function WelcomeGuideStyles() {
 	const { toggle } = useDispatch( preferencesStore );
 
-	const { isActive, isStylesOpen } = useSelect( ( select ) => {
+	const { isActive, isStylesOpen } = useSuspenseSelect( ( select ) => {
 		const sidebar = select( interfaceStore ).getActiveComplementaryArea(
 			editSiteStore.name
 		);

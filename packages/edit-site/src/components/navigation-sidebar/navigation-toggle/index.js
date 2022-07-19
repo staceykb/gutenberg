@@ -6,7 +6,7 @@ import classnames from 'classnames';
 /**
  * WordPress dependencies
  */
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { useEffect, useRef } from '@wordpress/element';
 import {
 	Button,
@@ -24,8 +24,8 @@ import { useReducedMotion } from '@wordpress/compose';
 import { store as editSiteStore } from '../../../store';
 
 function NavigationToggle( { icon } ) {
-	const { isNavigationOpen, isRequestingSiteIcon, siteIconUrl } = useSelect(
-		( select ) => {
+	const { isNavigationOpen, isRequestingSiteIcon, siteIconUrl } =
+		useSuspenseSelect( ( select ) => {
 			const { getEntityRecord, isResolving } = select( coreDataStore );
 			const siteData =
 				getEntityRecord( 'root', '__unstableBase', undefined ) || {};
@@ -39,9 +39,7 @@ function NavigationToggle( { icon } ) {
 				] ),
 				siteIconUrl: siteData.site_icon_url,
 			};
-		},
-		[]
-	);
+		}, [] );
 	const { setIsNavigationPanelOpened } = useDispatch( editSiteStore );
 
 	const disableMotion = useReducedMotion();

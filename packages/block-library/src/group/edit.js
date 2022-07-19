@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import {
 	InnerBlocks,
 	useBlockProps,
@@ -35,7 +35,7 @@ const htmlElementMessages = {
 };
 
 function GroupEdit( { attributes, setAttributes, clientId } ) {
-	const { hasInnerBlocks, themeSupportsLayout } = useSelect(
+	const { hasInnerBlocks, themeSupportsLayout } = useSuspenseSelect(
 		( select ) => {
 			const { getBlock, getSettings } = select( blockEditorStore );
 			const block = getBlock( clientId );

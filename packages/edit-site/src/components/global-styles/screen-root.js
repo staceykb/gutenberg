@@ -14,7 +14,7 @@ import {
 } from '@wordpress/components';
 import { isRTL, __ } from '@wordpress/i18n';
 import { chevronLeft, chevronRight } from '@wordpress/icons';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 
 /**
@@ -26,7 +26,7 @@ import ContextMenu from './context-menu';
 import StylesPreview from './preview';
 
 function ScreenRoot() {
-	const { variations } = useSelect( ( select ) => {
+	const { variations } = useSuspenseSelect( ( select ) => {
 		return {
 			variations:
 				select(

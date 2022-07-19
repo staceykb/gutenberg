@@ -8,7 +8,7 @@ import { map, filter } from 'lodash';
  * WordPress dependencies
  */
 import { __, _x } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { useState, useRef } from '@wordpress/element';
 import {
 	BlockControls,
@@ -157,7 +157,7 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 	} = attributes;
 	const mediaSizeSlug = attributes.mediaSizeSlug || DEFAULT_MEDIA_SIZE_SLUG;
 
-	const image = useSelect(
+	const image = useSuspenseSelect(
 		( select ) =>
 			mediaId && isSelected
 				? select( coreStore ).getMedia( mediaId, { context: 'view' } )
@@ -213,7 +213,7 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 		setAttributes( { verticalAlignment: alignment } );
 	};
 
-	const imageSizes = useSelect( ( select ) => {
+	const imageSizes = useSuspenseSelect( ( select ) => {
 		const settings = select( blockEditorStore ).getSettings();
 		return settings?.imageSizes;
 	}, [] );

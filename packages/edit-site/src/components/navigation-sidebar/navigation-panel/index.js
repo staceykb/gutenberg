@@ -14,7 +14,7 @@ import {
 	__experimentalNavigationMenu as NavigationMenu,
 } from '@wordpress/components';
 import { store as coreDataStore } from '@wordpress/core-data';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { ESCAPE } from '@wordpress/keycodes';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -40,7 +40,7 @@ function NavLink( { params, replace, ...props } ) {
 }
 
 const NavigationPanel = ( { activeItem = SITE_EDITOR_KEY } ) => {
-	const { homeTemplate, isNavigationOpen, siteTitle } = useSelect(
+	const { homeTemplate, isNavigationOpen, siteTitle } = useSuspenseSelect(
 		( select ) => {
 			const { getEntityRecord } = select( coreDataStore );
 			const { getSettings, isNavigationOpened } = select( editSiteStore );

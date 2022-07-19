@@ -6,7 +6,7 @@ import { render } from '@testing-library/react';
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -27,7 +27,7 @@ jest.mock( '@wordpress/core-data' );
 describe( 'NavigationToggle', () => {
 	describe( 'when in full screen mode', () => {
 		it( 'should display a user uploaded site icon if it exists', () => {
-			useSelect.mockImplementation( ( cb ) => {
+			useSuspenseSelect.mockImplementation( ( cb ) => {
 				return cb( () => ( {
 					getCurrentTemplateNavigationPanelSubMenu: () => 'root',
 					getEntityRecord: () => ( {
@@ -47,7 +47,7 @@ describe( 'NavigationToggle', () => {
 		} );
 
 		it( 'should display a default site icon if no user uploaded site icon exists', () => {
-			useSelect.mockImplementation( ( cb ) => {
+			useSuspenseSelect.mockImplementation( ( cb ) => {
 				return cb( () => ( {
 					getCurrentTemplateNavigationPanelSubMenu: () => 'root',
 					getEntityRecord: () => ( {

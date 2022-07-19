@@ -3,7 +3,7 @@
  */
 import { parse, __unstableSerializeAndClean } from '@wordpress/blocks';
 import { useEntityBlockEditor, useEntityProp } from '@wordpress/core-data';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
@@ -15,7 +15,7 @@ import { store as editSiteStore } from '../../store';
 import CodeEditorTextArea from './code-editor-text-area';
 
 export default function CodeEditor() {
-	const { templateType, shortcut } = useSelect( ( select ) => {
+	const { templateType, shortcut } = useSuspenseSelect( ( select ) => {
 		const { getEditedPostType } = select( editSiteStore );
 		const { getShortcutRepresentation } = select( keyboardShortcutsStore );
 		return {

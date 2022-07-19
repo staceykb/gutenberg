@@ -6,7 +6,7 @@ import { some } from 'lodash';
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { store as coreStore } from '@wordpress/core-data';
@@ -15,7 +15,7 @@ export default function SaveButton( {
 	openEntitiesSavedStates,
 	isEntitiesSavedStatesOpen,
 } ) {
-	const { isDirty, isSaving } = useSelect( ( select ) => {
+	const { isDirty, isSaving } = useSuspenseSelect( ( select ) => {
 		const { __experimentalGetDirtyEntityRecords, isSavingEntityRecord } =
 			select( coreStore );
 		const dirtyEntityRecords = __experimentalGetDirtyEntityRecords();

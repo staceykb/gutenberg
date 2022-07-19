@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { store as blockEditorStore } from '@wordpress/block-editor';
 
 /**
@@ -11,7 +11,7 @@ import ConvertToRegularBlocks from './convert-to-regular';
 import ConvertToTemplatePart from './convert-to-template-part';
 
 export default function TemplatePartConverter() {
-	const { clientIds, blocks } = useSelect( ( select ) => {
+	const { clientIds, blocks } = useSuspenseSelect( ( select ) => {
 		const { getSelectedBlockClientIds, getBlocksByClientId } =
 			select( blockEditorStore );
 		const selectedBlockClientIds = getSelectedBlockClientIds();

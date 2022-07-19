@@ -9,7 +9,7 @@ import classnames from 'classnames';
 import { Modal } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -65,7 +65,7 @@ const ShortcutCategorySection = ( {
 	categoryName,
 	additionalShortcuts = [],
 } ) => {
-	const categoryShortcuts = useSelect(
+	const categoryShortcuts = useSuspenseSelect(
 		( select ) => {
 			return select( keyboardShortcutsStore ).getCategoryShortcuts(
 				categoryName

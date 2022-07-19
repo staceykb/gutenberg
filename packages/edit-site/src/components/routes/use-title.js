@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { useEffect, useRef } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { __, sprintf } from '@wordpress/i18n';
 import { speak } from '@wordpress/a11y';
@@ -15,7 +15,7 @@ import { useLocation } from './index';
 
 export default function useTitle( title ) {
 	const location = useLocation();
-	const siteTitle = useSelect(
+	const siteTitle = useSuspenseSelect(
 		( select ) =>
 			select( coreStore ).getEntityRecord( 'root', 'site' )?.title,
 		[]

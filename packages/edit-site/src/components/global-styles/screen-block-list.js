@@ -8,7 +8,7 @@ import {
 	SearchControl,
 	__experimentalHStack as HStack,
 } from '@wordpress/components';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { useState, useMemo, useEffect, useRef } from '@wordpress/element';
 import { BlockIcon } from '@wordpress/block-editor';
 import { useDebounce } from '@wordpress/compose';
@@ -25,7 +25,7 @@ import ScreenHeader from './header';
 import { NavigationButtonAsItem } from './navigation-button';
 
 function useSortedBlockTypes() {
-	const blockItems = useSelect(
+	const blockItems = useSuspenseSelect(
 		( select ) => select( blocksStore ).getBlockTypes(),
 		[]
 	);
@@ -83,7 +83,7 @@ function ScreenBlockList() {
 	const sortedBlockTypes = useSortedBlockTypes();
 	const [ filterValue, setFilterValue ] = useState( '' );
 	const debouncedSpeak = useDebounce( speak, 500 );
-	const isMatchingSearchTerm = useSelect(
+	const isMatchingSearchTerm = useSuspenseSelect(
 		( select ) => select( blocksStore ).isMatchingSearchTerm,
 		[]
 	);

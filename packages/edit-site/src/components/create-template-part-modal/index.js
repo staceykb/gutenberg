@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import {
 	Icon,
 	BaseControl,
@@ -31,7 +31,7 @@ export default function CreateTemplatePartModal( { closeModal, onCreate } ) {
 	const [ isSubmitting, setIsSubmitting ] = useState( false );
 	const instanceId = useInstanceId( CreateTemplatePartModal );
 
-	const templatePartAreas = useSelect(
+	const templatePartAreas = useSuspenseSelect(
 		( select ) =>
 			select( editorStore ).__experimentalGetDefaultTemplatePartAreas(),
 		[]

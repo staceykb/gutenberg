@@ -3,7 +3,7 @@
  */
 import { sprintf, __ } from '@wordpress/i18n';
 import { DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { store as editorStore } from '@wordpress/editor';
 import { store as blockEditorStore } from '@wordpress/block-editor';
 import { moreVertical } from '@wordpress/icons';
@@ -77,7 +77,7 @@ function TemplatePartItem( {
 } ) {
 	const { selectBlock, toggleBlockHighlight } =
 		useDispatch( blockEditorStore );
-	const templatePartArea = useSelect(
+	const templatePartArea = useSuspenseSelect(
 		( select ) => {
 			const defaultAreas =
 				select(
@@ -133,7 +133,7 @@ function TemplatePartItem( {
 }
 
 export default function TemplateAreas( { closeTemplateDetailsDropdown } ) {
-	const templateParts = useSelect(
+	const templateParts = useSuspenseSelect(
 		( select ) => select( editSiteStore ).getCurrentTemplateTemplateParts(),
 		[]
 	);

@@ -13,7 +13,12 @@ import {
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
 import { ToolbarButton } from '@wordpress/components';
-import { useDispatch, useSelect, useRegistry } from '@wordpress/data';
+import {
+	useDispatch,
+	useSelect,
+	useSuspenseSelect,
+	useRegistry,
+} from '@wordpress/data';
 import { isRTL, __ } from '@wordpress/i18n';
 import {
 	formatListBullets,
@@ -73,7 +78,7 @@ function useMigrateOnLoad( attributes, clientId ) {
 }
 
 function useOutdentList( clientId ) {
-	const { canOutdent } = useSelect(
+	const { canOutdent } = useSuspenseSelect(
 		( innerSelect ) => {
 			const { getBlockRootClientId, getBlock } =
 				innerSelect( blockEditorStore );

@@ -2,12 +2,12 @@
  * WordPress dependencies
  */
 import { useEntityProp, store as coreStore } from '@wordpress/core-data';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 
 export default function usePostTerms( { postId, postType, term } ) {
 	const { rest_base: restBase, slug } = term;
 	const [ termIds ] = useEntityProp( 'postType', postType, restBase, postId );
-	return useSelect(
+	return useSuspenseSelect(
 		( select ) => {
 			const visible = term?.visibility?.publicly_queryable;
 			if ( ! visible ) {

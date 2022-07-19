@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { Icon } from '@wordpress/components';
 import { store as editorStore } from '@wordpress/editor';
 import { store as coreStore } from '@wordpress/core-data';
@@ -17,7 +17,7 @@ export default function TemplateCard() {
 	const {
 		info: { title, description, icon },
 		template,
-	} = useSelect( ( select ) => {
+	} = useSuspenseSelect( ( select ) => {
 		const { getEditedPostType, getEditedPostId } = select( editSiteStore );
 		const { getEditedEntityRecord } = select( coreStore );
 		const { __experimentalGetTemplateInfo: getTemplateInfo } =

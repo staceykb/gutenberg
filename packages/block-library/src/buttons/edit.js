@@ -6,7 +6,7 @@ import {
 	useInnerBlocksProps,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -32,7 +32,7 @@ const DEFAULT_BLOCK = {
 
 function ButtonsEdit( { attributes: { layout = {} } } ) {
 	const blockProps = useBlockProps();
-	const preferredStyle = useSelect( ( select ) => {
+	const preferredStyle = useSuspenseSelect( ( select ) => {
 		const preferredStyleVariations =
 			select( blockEditorStore ).getSettings()
 				.__experimentalPreferredStyleVariations;

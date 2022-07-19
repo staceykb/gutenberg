@@ -4,7 +4,7 @@
 import { __ } from '@wordpress/i18n';
 import { speak } from '@wordpress/a11y';
 import { MenuItem } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { store as interfaceStore } from '@wordpress/interface';
 import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
 
@@ -16,7 +16,7 @@ import { STORE_NAME } from '../../store/constants';
 import { SIDEBAR_BLOCK } from '../sidebar/constants';
 
 export default function BlockInspectorButton( { onClick = () => {} } ) {
-	const { shortcut, isBlockInspectorOpen } = useSelect(
+	const { shortcut, isBlockInspectorOpen } = useSuspenseSelect(
 		( select ) => ( {
 			shortcut: select(
 				keyboardShortcutsStore

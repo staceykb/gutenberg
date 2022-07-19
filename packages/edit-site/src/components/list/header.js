@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { __experimentalHeading as Heading } from '@wordpress/components';
 
@@ -11,7 +11,7 @@ import { __experimentalHeading as Heading } from '@wordpress/components';
 import AddNewTemplate from '../add-new-template';
 
 export default function Header( { templateType } ) {
-	const postType = useSelect(
+	const postType = useSuspenseSelect(
 		( select ) => select( coreStore ).getPostType( templateType ),
 		[ templateType ]
 	);

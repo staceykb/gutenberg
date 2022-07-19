@@ -7,7 +7,7 @@ import { mergeWith, pickBy, isEmpty, mapValues } from 'lodash';
  * WordPress dependencies
  */
 import { useMemo, useCallback } from '@wordpress/element';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSelect, useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 
 /**
@@ -46,22 +46,25 @@ const cleanEmptyObject = ( object ) => {
 };
 
 function useGlobalStylesUserConfig() {
-	const { globalStylesId, settings, styles } = useSelect( ( select ) => {
-		const _globalStylesId =
-			select( coreStore ).__experimentalGetCurrentGlobalStylesId();
-		const record = _globalStylesId
-			? select( coreStore ).getEditedEntityRecord(
-					'root',
-					'globalStyles',
-					_globalStylesId
-			  )
-			: undefined;
-		return {
-			globalStylesId: _globalStylesId,
-			settings: record?.settings,
-			styles: record?.styles,
-		};
-	}, [] );
+	const { globalStylesId, settings, styles } = useSuspenseSelect(
+		( select ) => {
+			const _globalStylesId =
+				select( coreStore ).__experimentalGetCurrentGlobalStylesId();
+			const record = _globalStylesId
+				? select( coreStore ).getEditedEntityRecord(
+						'root',
+						'globalStyles',
+						_globalStylesId
+				  )
+				: undefined;
+			return {
+				globalStylesId: _globalStylesId,
+				settings: record?.settings,
+				styles: record?.styles,
+			};
+		},
+		[]
+	);
 
 	const { getEditedEntityRecord } = useSelect( coreStore );
 	const { editEntityRecord } = useDispatch( coreStore );
@@ -96,7 +99,7 @@ function useGlobalStylesUserConfig() {
 }
 
 function useGlobalStylesBaseConfig() {
-	const baseConfig = useSelect( ( select ) => {
+	const baseConfig = useSuspenseSelect( ( select ) => {
 		return select(
 			coreStore
 		).__experimentalGetCurrentThemeBaseGlobalStyles();

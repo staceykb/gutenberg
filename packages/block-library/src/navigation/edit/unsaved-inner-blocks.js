@@ -9,7 +9,7 @@ import classnames from 'classnames';
 import { useInnerBlocksProps } from '@wordpress/block-editor';
 import { Disabled, Spinner } from '@wordpress/components';
 import { store as coreStore } from '@wordpress/core-data';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { useContext, useEffect, useRef, useMemo } from '@wordpress/element';
 
 /**
@@ -89,7 +89,7 @@ export default function UnsavedInnerBlocks( {
 	} );
 
 	const { isSaving, draftNavigationMenus, hasResolvedDraftNavigationMenus } =
-		useSelect(
+		useSuspenseSelect(
 			( select ) => {
 				if ( isDisabled ) {
 					return EMPTY_OBJECT;

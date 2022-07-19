@@ -5,12 +5,12 @@ import {
 	store as coreStore,
 	__experimentalUseResourcePermissions as useResourcePermissions,
 } from '@wordpress/core-data';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 
 export default function useNavigationMenu( ref ) {
 	const permissions = useResourcePermissions( 'navigation', ref );
 
-	return useSelect(
+	return useSuspenseSelect(
 		( select ) => {
 			const [
 				hasResolvedPermissions,

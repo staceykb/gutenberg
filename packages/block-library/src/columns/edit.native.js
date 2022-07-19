@@ -26,7 +26,7 @@ import {
 	useSetting,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { withDispatch, useSelect } from '@wordpress/data';
+import { withDispatch, useSuspenseSelect } from '@wordpress/data';
 import {
 	useEffect,
 	useState,
@@ -450,7 +450,7 @@ const ColumnsEdit = ( props ) => {
 		hasParents,
 		parentBlockAlignment,
 		editorSidebarOpened,
-	} = useSelect(
+	} = useSuspenseSelect(
 		( select ) => {
 			const {
 				getBlockCount,

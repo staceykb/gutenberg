@@ -6,7 +6,7 @@ import {
 	useShortcut,
 	store as keyboardShortcutsStore,
 } from '@wordpress/keyboard-shortcuts';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useDispatch, useSelect, useSuspenseSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { store as coreStore } from '@wordpress/core-data';
 import { store as interfaceStore } from '@wordpress/interface';
@@ -22,11 +22,11 @@ function KeyboardShortcuts( { openEntitiesSavedStates } ) {
 	const { __experimentalGetDirtyEntityRecords, isSavingEntityRecord } =
 		useSelect( coreStore );
 	const { getEditorMode } = useSelect( editSiteStore );
-	const isListViewOpen = useSelect(
+	const isListViewOpen = useSuspenseSelect(
 		( select ) => select( editSiteStore ).isListViewOpened(),
 		[]
 	);
-	const isBlockInspectorOpen = useSelect(
+	const isBlockInspectorOpen = useSuspenseSelect(
 		( select ) =>
 			select( interfaceStore ).getActiveComplementaryArea(
 				editSiteStore.name

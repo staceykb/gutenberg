@@ -3,7 +3,7 @@
  */
 import { __, isRTL } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { redo as redoIcon, undo as undoIcon } from '@wordpress/icons';
 import { displayShortcut, isAppleOS } from '@wordpress/keycodes';
 import { store as coreStore } from '@wordpress/core-data';
@@ -14,7 +14,7 @@ function RedoButton( props, ref ) {
 		? displayShortcut.primaryShift( 'z' )
 		: displayShortcut.primary( 'y' );
 
-	const hasRedo = useSelect(
+	const hasRedo = useSuspenseSelect(
 		( select ) => select( coreStore ).hasRedo(),
 		[]
 	);

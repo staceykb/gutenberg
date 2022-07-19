@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import {
 	Button,
 	__experimentalHeading as Heading,
@@ -18,7 +18,7 @@ import { store as editSiteStore } from '../../../store';
 function TemplateAreaItem( { area, clientId } ) {
 	const { selectBlock, toggleBlockHighlight } =
 		useDispatch( blockEditorStore );
-	const templatePartArea = useSelect(
+	const templatePartArea = useSuspenseSelect(
 		( select ) => {
 			const defaultAreas =
 				select(
@@ -53,7 +53,7 @@ function TemplateAreaItem( { area, clientId } ) {
 }
 
 export default function TemplateAreas() {
-	const templateParts = useSelect(
+	const templateParts = useSuspenseSelect(
 		( select ) => select( editSiteStore ).getCurrentTemplateTemplateParts(),
 		[]
 	);

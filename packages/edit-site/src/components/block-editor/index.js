@@ -7,7 +7,7 @@ import { omit, unionBy } from 'lodash';
 /**
  * WordPress dependencies
  */
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { useCallback, useMemo, useRef, Fragment } from '@wordpress/element';
 import { useEntityBlockEditor, store as coreStore } from '@wordpress/core-data';
 import {
@@ -48,20 +48,25 @@ const LAYOUT = {
 };
 
 export default function BlockEditor( { setIsInserterOpen } ) {
-	const { storedSettings, templateType, templateId, page } = useSelect(
-		( select ) => {
-			const { getSettings, getEditedPostType, getEditedPostId, getPage } =
-				select( editSiteStore );
+	const { storedSettings, templateType, templateId, page } =
+		useSuspenseSelect(
+			( select ) => {
+				const {
+					getSettings,
+					getEditedPostType,
+					getEditedPostId,
+					getPage,
+				} = select( editSiteStore );
 
-			return {
-				storedSettings: getSettings( setIsInserterOpen ),
-				templateType: getEditedPostType(),
-				templateId: getEditedPostId(),
-				page: getPage(),
-			};
-		},
-		[ setIsInserterOpen ]
-	);
+				return {
+					storedSettings: getSettings( setIsInserterOpen ),
+					templateType: getEditedPostType(),
+					templateId: getEditedPostId(),
+					page: getPage(),
+				};
+			},
+			[ setIsInserterOpen ]
+		);
 
 	const settingsBlockPatterns =
 		storedSettings.__experimentalAdditionalBlockPatterns ?? // WP 6.0
@@ -70,7 +75,7 @@ export default function BlockEditor( { setIsInserterOpen } ) {
 		storedSettings.__experimentalAdditionalBlockPatternCategories ?? // WP 6.0
 		storedSettings.__experimentalBlockPatternCategories; // WP 5.9
 
-	const { restBlockPatterns, restBlockPatternCategories } = useSelect(
+	const { restBlockPatterns, restBlockPatternCategories } = useSuspenseSelect(
 		( select ) => ( {
 			restBlockPatterns: select( coreStore ).getBlockPatterns(),
 			restBlockPatternCategories:

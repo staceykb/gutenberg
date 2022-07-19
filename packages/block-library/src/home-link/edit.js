@@ -8,7 +8,7 @@ import classnames from 'classnames';
  */
 import { RichText, useBlockProps } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { useEffect } from '@wordpress/element';
 
@@ -20,7 +20,7 @@ export default function HomeEdit( {
 	context,
 	clientId,
 } ) {
-	const { homeUrl } = useSelect(
+	const { homeUrl } = useSuspenseSelect(
 		( select ) => {
 			const {
 				getUnstableBase, // Site index.

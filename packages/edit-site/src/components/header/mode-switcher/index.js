@@ -3,7 +3,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import { MenuItemsChoice, MenuGroup } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
 
 /**
@@ -31,7 +31,7 @@ const MODES = [
 ];
 
 function ModeSwitcher() {
-	const { shortcut, mode } = useSelect(
+	const { shortcut, mode } = useSuspenseSelect(
 		( select ) => ( {
 			shortcut: select(
 				keyboardShortcutsStore

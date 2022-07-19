@@ -9,7 +9,7 @@ import { get, has, isEmpty, omit, pick } from 'lodash';
  */
 import { getBlobByURL, isBlobURL, revokeBlobURL } from '@wordpress/blob';
 import { withNotices } from '@wordpress/components';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import {
 	BlockAlignmentControl,
 	BlockControls,
@@ -121,7 +121,7 @@ export function ImageEdit( {
 	}, [ caption ] );
 
 	const ref = useRef();
-	const { imageDefaultSize, mediaUpload } = useSelect( ( select ) => {
+	const { imageDefaultSize, mediaUpload } = useSuspenseSelect( ( select ) => {
 		const { getSettings } = select( blockEditorStore );
 		return pick( getSettings(), [ 'imageDefaultSize', 'mediaUpload' ] );
 	}, [] );

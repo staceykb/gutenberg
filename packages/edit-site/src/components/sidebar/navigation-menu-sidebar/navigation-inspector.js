@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { useState, useEffect } from '@wordpress/element';
 import { SelectControl } from '@wordpress/components';
 import { store as coreStore, useEntityBlockEditor } from '@wordpress/core-data';
@@ -28,7 +28,7 @@ export default function NavigationInspector() {
 		isResolvingNavigationMenus,
 		hasResolvedNavigationMenus,
 		firstNavigationBlockId,
-	} = useSelect( ( select ) => {
+	} = useSuspenseSelect( ( select ) => {
 		const {
 			__experimentalGetActiveBlockIdByBlockNames,
 			__experimentalGetGlobalBlocksByName,
@@ -113,7 +113,7 @@ export default function NavigationInspector() {
 		{ id: currentMenuId || defaultNavigationMenuId }
 	);
 
-	const { isLoadingInnerBlocks, hasLoadedInnerBlocks } = useSelect(
+	const { isLoadingInnerBlocks, hasLoadedInnerBlocks } = useSuspenseSelect(
 		( select ) => {
 			const { isResolving, hasFinishedResolution } = select( coreStore );
 			return {

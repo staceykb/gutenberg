@@ -5,7 +5,7 @@ import { createSlotFill, PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { cog } from '@wordpress/icons';
 import { useEffect, Fragment } from '@wordpress/element';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { store as interfaceStore } from '@wordpress/interface';
 import { store as blockEditorStore } from '@wordpress/block-editor';
 
@@ -26,8 +26,8 @@ const { Slot: InspectorSlot, Fill: InspectorFill } = createSlotFill(
 export const SidebarInspectorFill = InspectorFill;
 
 export function SidebarComplementaryAreaFills() {
-	const { sidebar, isEditorSidebarOpened, hasBlockSelection } = useSelect(
-		( select ) => {
+	const { sidebar, isEditorSidebarOpened, hasBlockSelection } =
+		useSuspenseSelect( ( select ) => {
 			const _sidebar =
 				select( interfaceStore ).getActiveComplementaryArea(
 					STORE_NAME
@@ -42,9 +42,7 @@ export function SidebarComplementaryAreaFills() {
 				hasBlockSelection:
 					!! select( blockEditorStore ).getBlockSelectionStart(),
 			};
-		},
-		[]
-	);
+		}, [] );
 	const { enableComplementaryArea } = useDispatch( interfaceStore );
 
 	useEffect( () => {

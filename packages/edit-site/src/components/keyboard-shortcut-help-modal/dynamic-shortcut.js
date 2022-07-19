@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
 
 /**
@@ -10,7 +10,7 @@ import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
 import Shortcut from './shortcut';
 
 export default function DynamicShortcut( { name } ) {
-	const { keyCombination, description, aliases } = useSelect(
+	const { keyCombination, description, aliases } = useSuspenseSelect(
 		( select ) => {
 			const {
 				getShortcutKeyCombination,

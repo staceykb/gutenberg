@@ -3,14 +3,14 @@
  */
 import { __, isRTL } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { undo as undoIcon, redo as redoIcon } from '@wordpress/icons';
 import { displayShortcut } from '@wordpress/keycodes';
 import { store as coreStore } from '@wordpress/core-data';
 import { forwardRef } from '@wordpress/element';
 
 function UndoButton( props, ref ) {
-	const hasUndo = useSelect(
+	const hasUndo = useSuspenseSelect(
 		( select ) => select( coreStore ).hasUndo(),
 		[]
 	);

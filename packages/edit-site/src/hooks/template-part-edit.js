@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { BlockControls } from '@wordpress/block-editor';
 import { store as coreStore } from '@wordpress/core-data';
 import { ToolbarButton } from '@wordpress/components';
@@ -18,7 +18,7 @@ import { useLink } from '../components/routes/link';
 function EditTemplatePartMenuItem( { attributes } ) {
 	const { theme, slug } = attributes;
 	const { params } = useLocation();
-	const templatePart = useSelect(
+	const templatePart = useSuspenseSelect(
 		( select ) => {
 			return select( coreStore ).getEntityRecord(
 				'postType',

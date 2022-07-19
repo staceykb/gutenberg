@@ -8,7 +8,7 @@ import classnames from 'classnames';
  * WordPress dependencies
  */
 import { store as coreStore } from '@wordpress/core-data';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { useMemo, useContext, useState } from '@wordpress/element';
 import { ENTER } from '@wordpress/keycodes';
 import {
@@ -95,7 +95,7 @@ function Variation( { variation } ) {
 }
 
 function ScreenStyleVariations() {
-	const { variations } = useSelect( ( select ) => {
+	const { variations } = useSuspenseSelect( ( select ) => {
 		return {
 			variations:
 				select(

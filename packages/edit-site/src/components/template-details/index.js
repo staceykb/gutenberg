@@ -9,7 +9,7 @@ import {
 	__experimentalHeading as Heading,
 	__experimentalText as Text,
 } from '@wordpress/components';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useDispatch, useSuspenseSelect } from '@wordpress/data';
 import { store as editorStore } from '@wordpress/editor';
 
 /**
@@ -22,7 +22,7 @@ import EditTemplateTitle from './edit-template-title';
 import { useLink } from '../routes/link';
 
 export default function TemplateDetails( { template, onClose } ) {
-	const { title, description } = useSelect(
+	const { title, description } = useSuspenseSelect(
 		( select ) =>
 			select( editorStore ).__experimentalGetTemplateInfo( template ),
 		[]

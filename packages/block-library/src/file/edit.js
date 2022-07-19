@@ -13,7 +13,7 @@ import {
 	ResizableBox,
 	ToolbarButton,
 } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import {
 	BlockControls,
 	BlockIcon,
@@ -80,7 +80,7 @@ function FileEdit( {
 		displayPreview,
 		previewHeight,
 	} = attributes;
-	const { media, mediaUpload } = useSelect(
+	const { media, mediaUpload } = useSuspenseSelect(
 		( select ) => ( {
 			media:
 				id === undefined

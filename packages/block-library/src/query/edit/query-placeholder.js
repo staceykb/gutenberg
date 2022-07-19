@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import {
 	useBlockProps,
 	__experimentalBlockVariationPicker,
@@ -13,7 +13,7 @@ import {
 } from '@wordpress/blocks';
 
 function QueryPlaceholder( { clientId, name, setAttributes, icon, label } ) {
-	const { defaultVariation, scopeVariations } = useSelect(
+	const { defaultVariation, scopeVariations } = useSuspenseSelect(
 		( select ) => {
 			const {
 				getBlockVariations,

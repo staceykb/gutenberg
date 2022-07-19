@@ -12,7 +12,7 @@ import {
 	Tooltip,
 } from '@wordpress/components';
 import { store as coreStore } from '@wordpress/core-data';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import {
 	commentAuthorAvatar as authorIcon,
@@ -76,7 +76,7 @@ function BaseAddedBy( { text, icon, imageUrl, isCustomized } ) {
 }
 
 function AddedByTheme( { slug, isCustomized } ) {
-	const theme = useSelect(
+	const theme = useSuspenseSelect(
 		( select ) => select( coreStore ).getTheme( slug ),
 		[ slug ]
 	);
@@ -91,7 +91,7 @@ function AddedByTheme( { slug, isCustomized } ) {
 }
 
 function AddedByPlugin( { slug, isCustomized } ) {
-	const plugin = useSelect(
+	const plugin = useSuspenseSelect(
 		( select ) => select( coreStore ).getPlugin( slug ),
 		[ slug ]
 	);
@@ -106,7 +106,7 @@ function AddedByPlugin( { slug, isCustomized } ) {
 }
 
 function AddedByAuthor( { id } ) {
-	const user = useSelect(
+	const user = useSuspenseSelect(
 		( select ) => select( coreStore ).getUser( id ),
 		[ id ]
 	);
@@ -121,7 +121,7 @@ function AddedByAuthor( { id } ) {
 }
 
 function AddedBySite() {
-	const { name, logoURL } = useSelect( ( select ) => {
+	const { name, logoURL } = useSuspenseSelect( ( select ) => {
 		const { getEntityRecord, getMedia } = select( coreStore );
 		const siteData = getEntityRecord( 'root', '__unstableBase' );
 

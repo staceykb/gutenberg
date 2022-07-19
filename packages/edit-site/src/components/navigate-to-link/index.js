@@ -3,7 +3,7 @@
  */
 import { getPathAndQueryString } from '@wordpress/url';
 import { useMemo } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { Button } from '@wordpress/components';
 import { edit } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
@@ -15,7 +15,7 @@ export default function NavigateToLink( {
 	activePage,
 	onActivePageChange,
 } ) {
-	const post = useSelect(
+	const post = useSuspenseSelect(
 		( select ) =>
 			type &&
 			id &&

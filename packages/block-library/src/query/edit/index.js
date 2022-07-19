@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { store as blocksStore, cloneBlock } from '@wordpress/blocks';
 import { useInstanceId } from '@wordpress/compose';
 import { useState, useEffect } from '@wordpress/element';
@@ -50,7 +50,7 @@ export function QueryContent( {
 	const { __unstableMarkNextChangeAsNotPersistent } =
 		useDispatch( blockEditorStore );
 	const instanceId = useInstanceId( QueryContent );
-	const { themeSupportsLayout } = useSelect( ( select ) => {
+	const { themeSupportsLayout } = useSuspenseSelect( ( select ) => {
 		const { getSettings } = select( blockEditorStore );
 		return { themeSupportsLayout: getSettings()?.supportsLayout };
 	}, [] );
@@ -61,7 +61,7 @@ export function QueryContent( {
 		template: TEMPLATE,
 		__experimentalLayout: themeSupportsLayout ? usedLayout : undefined,
 	} );
-	const { postsPerPage } = useSelect( ( select ) => {
+	const { postsPerPage } = useSuspenseSelect( ( select ) => {
 		const { getSettings } = select( blockEditorStore );
 		return {
 			postsPerPage:
@@ -148,7 +148,7 @@ function QueryPatternSetup( {
 	const [ isStartingBlank, setIsStartingBlank ] = useState( false );
 	const blockProps = useBlockProps();
 
-	const { blockType, allVariations, hasPatterns } = useSelect(
+	const { blockType, allVariations, hasPatterns } = useSuspenseSelect(
 		( select ) => {
 			const { getBlockVariations, getBlockType } = select( blocksStore );
 			const {
@@ -219,7 +219,7 @@ const QueryEdit = ( props ) => {
 	const [ isPatternSelectionModalOpen, setIsPatternSelectionModalOpen ] =
 		useState( false );
 	const { replaceBlock, selectBlock } = useDispatch( blockEditorStore );
-	const hasInnerBlocks = useSelect(
+	const hasInnerBlocks = useSuspenseSelect(
 		( select ) =>
 			!! select( blockEditorStore ).getBlocks( clientId ).length,
 		[ clientId ]

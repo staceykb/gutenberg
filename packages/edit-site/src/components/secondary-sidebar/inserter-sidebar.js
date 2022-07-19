@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { Button, VisuallyHidden } from '@wordpress/components';
 import { __experimentalLibrary as Library } from '@wordpress/block-editor';
 import { close } from '@wordpress/icons';
@@ -19,7 +19,7 @@ import { store as editSiteStore } from '../../store';
 
 export default function InserterSidebar() {
 	const { setIsInserterOpened } = useDispatch( editSiteStore );
-	const insertionPoint = useSelect(
+	const insertionPoint = useSuspenseSelect(
 		( select ) => select( editSiteStore ).__experimentalGetInsertionPoint(),
 		[]
 	);

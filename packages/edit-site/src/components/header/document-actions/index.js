@@ -11,7 +11,7 @@ import {
 	__experimentalGetBlockLabel as getBlockLabel,
 	getBlockType,
 } from '@wordpress/blocks';
-import { useSelect } from '@wordpress/data';
+import { useSelect, useSuspenseSelect } from '@wordpress/data';
 import {
 	Dropdown,
 	Button,
@@ -32,7 +32,7 @@ function getBlockDisplayText( block ) {
 
 function useSecondaryText() {
 	const { getBlock } = useSelect( blockEditorStore );
-	const activeEntityBlockId = useSelect(
+	const activeEntityBlockId = useSuspenseSelect(
 		( select ) =>
 			select(
 				blockEditorStore

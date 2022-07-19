@@ -17,7 +17,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { InspectorControls } from '@wordpress/block-editor';
 import { useEffect, useState, useCallback } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
+import { useSuspenseSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 
 /**
@@ -31,7 +31,7 @@ import StickyControl from './sticky-control';
 import { usePostTypes } from '../../utils';
 
 function useIsPostTypeHierarchical( postType ) {
-	return useSelect(
+	return useSuspenseSelect(
 		( select ) => {
 			const type = select( coreStore ).getPostType( postType );
 			return type?.viewable && type?.hierarchical;
