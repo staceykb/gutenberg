@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { SlotFillProvider } from '@wordpress/components';
-import { Suspense } from '@wordpress/element';
+import { Fragment, lazy, Suspense } from '@wordpress/element';
 import { UnsavedChangesWarning } from '@wordpress/editor';
 import { store as noticesStore } from '@wordpress/notices';
 import { useDispatch } from '@wordpress/data';
@@ -50,6 +50,12 @@ const LoadingScreen = () => (
 	</div>
 );
 
+// Hotfix: prevent the loading spinner from flickering
+const MinimumLoadingDelay = lazy( async () => {
+	await new Promise( ( resolve ) => setTimeout( resolve, 2000 ) );
+	return { default: () => null };
+} );
+
 export default function EditSiteApp( { reboot } ) {
 	const { createErrorNotice } = useDispatch( noticesStore );
 
@@ -70,6 +76,8 @@ export default function EditSiteApp( { reboot } ) {
 			<UnsavedChangesWarning />
 
 			<Suspense fallback={ <LoadingScreen /> }>
+				<MinimumLoadingDelay />
+
 				<Routes>
 					{ ( { params } ) => {
 						const isListPage = getIsListPage( params );
