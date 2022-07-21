@@ -124,6 +124,10 @@ export function getBlockAttribute(
 				? commentAttributes[ attributeKey ]
 				: undefined;
 			break;
+		// raw source means that it's the original raw block content.
+		case 'raw':
+			value = innerHTML;
+			break;
 		case 'attribute':
 		case 'property':
 		case 'html':
