@@ -63,7 +63,6 @@ import * as buttons from './buttons';
 import * as socialLink from './social-link';
 import * as socialLinks from './social-links';
 
-import initBlock from './utils/init-block';
 import { transformationCategory } from './utils/transformation-categories';
 
 export const coreBlocks = [
@@ -235,7 +234,9 @@ export const registerCoreBlocks = () => {
 		reusableBlock,
 		search,
 		embed,
-	].forEach( initBlock );
+	]
+		.filter( Boolean )
+		.forEach( ( { init } ) => init() );
 
 	registerBlockVariations( socialLink );
 	setDefaultBlockName( paragraph.name );

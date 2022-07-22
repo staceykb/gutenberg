@@ -115,114 +115,114 @@ import * as textColumns from './text-columns';
 import * as verse from './verse';
 import * as video from './video';
 
-import initBlock from './utils/init-block';
 import isBlockMetadataExperimental from './utils/is-block-metadata-experimental';
 
 /**
  * Function to get all the block-library blocks in an array
  */
-const getAllBlocks = () => [
-	// Common blocks are grouped at the top to prioritize their display
-	// in various contexts — like the inserter and auto-complete components.
-	paragraph,
-	image,
-	heading,
-	gallery,
-	list,
-	listItem,
-	quote,
+const getAllBlocks = () =>
+	[
+		// Common blocks are grouped at the top to prioritize their display
+		// in various contexts — like the inserter and auto-complete components.
+		paragraph,
+		image,
+		heading,
+		gallery,
+		list,
+		listItem,
+		quote,
 
-	// Register all remaining core blocks.
-	archives,
-	audio,
-	button,
-	buttons,
-	calendar,
-	categories,
-	...( window.wp && window.wp.oldEditor ? [ classic ] : [] ), // Only add the classic block in WP Context.
-	code,
-	column,
-	columns,
-	commentAuthorAvatar,
-	cover,
-	embed,
-	file,
-	group,
-	html,
-	latestComments,
-	latestPosts,
-	mediaText,
-	missing,
-	more,
-	nextpage,
-	pageList,
-	pattern,
-	preformatted,
-	pullquote,
-	reusableBlock,
-	rss,
-	search,
-	separator,
-	shortcode,
-	socialLink,
-	socialLinks,
-	spacer,
-	table,
-	tagCloud,
-	textColumns,
-	verse,
-	video,
+		// Register all remaining core blocks.
+		archives,
+		audio,
+		button,
+		buttons,
+		calendar,
+		categories,
+		...( window.wp && window.wp.oldEditor ? [ classic ] : [] ), // Only add the classic block in WP Context.
+		code,
+		column,
+		columns,
+		commentAuthorAvatar,
+		cover,
+		embed,
+		file,
+		group,
+		html,
+		latestComments,
+		latestPosts,
+		mediaText,
+		missing,
+		more,
+		nextpage,
+		pageList,
+		pattern,
+		preformatted,
+		pullquote,
+		reusableBlock,
+		rss,
+		search,
+		separator,
+		shortcode,
+		socialLink,
+		socialLinks,
+		spacer,
+		table,
+		tagCloud,
+		textColumns,
+		verse,
+		video,
 
-	// theme blocks
-	navigation,
-	navigationLink,
-	navigationSubmenu,
-	siteLogo,
-	siteTitle,
-	siteTagline,
-	query,
-	templatePart,
-	avatar,
-	postTitle,
-	postExcerpt,
-	postFeaturedImage,
-	postContent,
-	postAuthor,
-	postAuthorName,
-	postComment,
-	postCommentsCount,
-	postCommentsLink,
-	postDate,
-	postTerms,
-	postNavigationLink,
-	postTemplate,
-	queryPagination,
-	queryPaginationNext,
-	queryPaginationNumbers,
-	queryPaginationPrevious,
-	queryNoResults,
-	readMore,
-	comments,
-	commentAuthorName,
-	commentContent,
-	commentDate,
-	commentEditLink,
-	commentReplyLink,
-	commentTemplate,
-	commentsTitle,
-	commentsPagination,
-	commentsPaginationNext,
-	commentsPaginationNumbers,
-	commentsPaginationPrevious,
-	postComments,
-	postCommentsForm,
-	tableOfContents,
-	homeLink,
-	logInOut,
-	termDescription,
-	queryTitle,
-	postAuthorBiography,
-];
+		// theme blocks
+		navigation,
+		navigationLink,
+		navigationSubmenu,
+		siteLogo,
+		siteTitle,
+		siteTagline,
+		query,
+		templatePart,
+		avatar,
+		postTitle,
+		postExcerpt,
+		postFeaturedImage,
+		postContent,
+		postAuthor,
+		postAuthorName,
+		postComment,
+		postCommentsCount,
+		postCommentsLink,
+		postDate,
+		postTerms,
+		postNavigationLink,
+		postTemplate,
+		queryPagination,
+		queryPaginationNext,
+		queryPaginationNumbers,
+		queryPaginationPrevious,
+		queryNoResults,
+		readMore,
+		comments,
+		commentAuthorName,
+		commentContent,
+		commentDate,
+		commentEditLink,
+		commentReplyLink,
+		commentTemplate,
+		commentsTitle,
+		commentsPagination,
+		commentsPaginationNext,
+		commentsPaginationNumbers,
+		commentsPaginationPrevious,
+		postComments,
+		postCommentsForm,
+		tableOfContents,
+		homeLink,
+		logInOut,
+		termDescription,
+		queryTitle,
+		postAuthorBiography,
+	].filter( Boolean );
 
 /**
  * Function to get all the core blocks in an array.
@@ -254,7 +254,7 @@ export const __experimentalGetCoreBlocks = () =>
 export const registerCoreBlocks = (
 	blocks = __experimentalGetCoreBlocks()
 ) => {
-	blocks.forEach( initBlock );
+	blocks.forEach( ( { init } ) => init() );
 
 	setDefaultBlockName( paragraph.name );
 	if ( window.wp && window.wp.oldEditor ) {
@@ -291,6 +291,6 @@ export const __experimentalRegisterExperimentalCoreBlocks = process.env
 						__experimental === true ||
 						enabledExperiments.includes( __experimental )
 				)
-				.forEach( initBlock );
+				.forEach( ( { init } ) => init() );
 	  }
 	: undefined;
