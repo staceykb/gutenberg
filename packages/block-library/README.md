@@ -36,19 +36,19 @@ _Parameters_
 
 ## Registering individual blocks
 
-1. When you only care about registering the block when file gets imported:
+1.  When you only care about registering the block when file gets imported:
 
     ```js
     import '@wordpress/block-library/verse/init';
     ```
 
-2. When you want to use the reference to the block after it gets automatically registered:
+2.  When you want to use the reference to the block after it gets automatically registered:
 
     ```js
     import verseBlock from '@wordpress/block-library/verse/init';
     ```
 
-3. When you need a full control over when the block gets registered:
+3.  When you need a full control over when the block gets registered:
 
     ```js
     import { init } from '@wordpress/block-library/verse';
