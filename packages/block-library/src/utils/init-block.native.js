@@ -13,7 +13,7 @@ const ALLOWED_BLOCKS_GRADIENT_SUPPORT = [ 'core/button' ];
  * @return {?WPBlockType} The block, if it has been successfully registered;
  *                        otherwise `undefined`.
  */
-export function initBlock( block ) {
+export default function initBlock( block ) {
 	if ( ! block ) {
 		return;
 	}
