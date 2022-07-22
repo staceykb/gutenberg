@@ -26,8 +26,8 @@ export const settings = {
 	deprecated,
 };
 
-// Importing this file includes side effects and is added
-// in block-library/package.json under `sideEffects`.
-addFilter( 'editor.BlockEdit', 'core/query', queryInspectorControls );
+export const init = () => {
+	addFilter( 'editor.BlockEdit', 'core/query', queryInspectorControls );
 
-export const init = () => initBlock( { name, metadata, settings } );
+	return initBlock( { name, metadata, settings } );
+};

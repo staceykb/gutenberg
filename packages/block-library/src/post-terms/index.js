@@ -20,11 +20,12 @@ export const settings = {
 	edit,
 };
 
-// Importing this file includes side effects. This is added in block-library/package.json under sideEffects
-addFilter(
-	'blocks.registerBlockType',
-	'core/template-part',
-	enhanceVariations
-);
+export const init = () => {
+	addFilter(
+		'blocks.registerBlockType',
+		'core/template-part',
+		enhanceVariations
+	);
 
-export const init = () => initBlock( { name, metadata, settings } );
+	return initBlock( { name, metadata, settings } );
+};

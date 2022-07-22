@@ -89,11 +89,12 @@ export const settings = {
 	transforms,
 };
 
-// importing this file includes side effects. This is added in block-library/package.json under sideEffects
-addFilter(
-	'blocks.registerBlockType',
-	'core/navigation-link',
-	enhanceNavigationLinkVariations
-);
+export const init = () => {
+	addFilter(
+		'blocks.registerBlockType',
+		'core/navigation-link',
+		enhanceNavigationLinkVariations
+	);
 
-export const init = () => initBlock( { name, metadata, settings } );
+	return initBlock( { name, metadata, settings } );
+};
