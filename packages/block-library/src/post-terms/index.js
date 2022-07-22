@@ -7,6 +7,7 @@ import { addFilter } from '@wordpress/hooks';
 /**
  * Internal dependencies
  */
+import initBlock from '../utils/init-block';
 import metadata from './block.json';
 import edit from './edit';
 import enhanceVariations from './hooks';
@@ -25,3 +26,5 @@ addFilter(
 	'core/template-part',
 	enhanceVariations
 );
+
+export const init = () => initBlock( { name, metadata, settings } );

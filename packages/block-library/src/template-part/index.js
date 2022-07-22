@@ -15,6 +15,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 /**
  * Internal dependencies
  */
+import initBlock from '../utils/init-block';
 import metadata from './block.json';
 import edit from './edit';
 import { enhanceTemplatePartVariations } from './variations';
@@ -81,3 +82,5 @@ addFilter(
 		return true;
 	}
 );
+
+export const init = () => initBlock( { name, metadata, settings } );
