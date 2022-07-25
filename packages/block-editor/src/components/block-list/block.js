@@ -18,6 +18,7 @@ import {
 	getSaveContent,
 	isUnmodifiedDefaultBlock,
 	serializeRawBlock,
+	store as blocksStore,
 } from '@wordpress/blocks';
 import { withFilters } from '@wordpress/components';
 import {
@@ -93,10 +94,21 @@ function BlockListBlock( {
 	onMerge,
 	toggleSelection,
 } ) {
-	const themeSupportsLayout = useSelect( ( select ) => {
-		const { getSettings } = select( blockEditorStore );
-		return getSettings().supportsLayout;
-	}, [] );
+	const { themeSupportsLayout, hasContentLockedParent, isContentBlock } =
+		useSelect(
+			( select ) => {
+				const { getSettings, __unstableGetContentLockingParent } =
+					select( blockEditorStore );
+				return {
+					themeSupportsLayout: getSettings().supportsLayout,
+					hasContentLockedParent:
+						!! __unstableGetContentLockingParent( clientId ),
+					isContentBlock:
+						select( blocksStore ).__unstableIsContentBlock( name ),
+				};
+			},
+			[ name, clientId ]
+		);
 	const { removeBlock } = useDispatch( blockEditorStore );
 	const onRemove = useCallback( () => removeBlock( clientId ), [ clientId ] );
 
@@ -122,6 +134,19 @@ function BlockListBlock( {
 
 	const blockType = getBlockType( name );
 
+	if ( hasContentLockedParent && ! isContentBlock ) {
+		wrapperProps = {
+			...wrapperProps,
+			tabIndex: -1,
+		};
+	}
+	console.log( {
+		clientId,
+		name,
+		hasContentLockedParent,
+		isContentBlock,
+		wrapperProps,
+	} );
 	// Determine whether the block has props to apply to the wrapper.
 	if ( blockType?.getEditWrapperProps ) {
 		wrapperProps = mergeWrapperProps(
@@ -186,13 +211,14 @@ function BlockListBlock( {
 
 	const value = {
 		clientId,
-		className:
-			wrapperProps?.[ 'data-align' ] && themeSupportsLayout
-				? classnames(
-						className,
-						`align${ wrapperProps[ 'data-align' ] }`
-				  )
-				: className,
+		className: classnames(
+			hasContentLockedParent &&
+				( isContentBlock ? 'is-content-block' : 'is-content-locked' ),
+			!! wrapperProps?.[ 'data-align' ] &&
+				!! themeSupportsLayout &&
+				`align${ wrapperProps[ 'data-align' ] }`,
+			className
+		),
 		wrapperProps: omit( wrapperProps, [ 'data-align' ] ),
 		isAligned,
 	};
