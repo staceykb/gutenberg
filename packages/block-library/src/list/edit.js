@@ -30,9 +30,6 @@ import deprecated from '@wordpress/deprecated';
 /**
  * Internal dependencies
  */
-/**
- * Internal dependencies
- */
 import OrderedListSettings from './ordered-list-settings';
 import { migrateToListV2 } from './utils';
 
@@ -129,7 +126,7 @@ function IndentUI( { clientId } ) {
 	);
 }
 
-function Edit( { attributes, setAttributes, clientId } ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockProps = useBlockProps();
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
 		allowedBlocks: [ 'core/list-item' ],
@@ -183,5 +180,3 @@ function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
-
-export default Edit;

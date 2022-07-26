@@ -75,6 +75,15 @@ const transforms = {
 				);
 			},
 		},
+		{
+			type: 'raw',
+			selector: 'ol,ul',
+			schema: ( args ) => ( {
+				ol: getListContentSchema( args ).ol,
+				ul: getListContentSchema( args ).ul,
+			} ),
+			transform: createListBlockFromDOMElement,
+		},
 		...[ '*', '-' ].map( ( prefix ) => ( {
 			type: 'prefix',
 			prefix,
@@ -97,15 +106,6 @@ const transforms = {
 				);
 			},
 		} ) ),
-		{
-			type: 'raw',
-			selector: 'ol,ul',
-			schema: ( args ) => ( {
-				ol: getListContentSchema( args ).ol,
-				ul: getListContentSchema( args ).ul,
-			} ),
-			transform: createListBlockFromDOMElement,
-		},
 	],
 	to: [
 		...[ 'core/paragraph', 'core/heading' ].map( ( block ) => ( {
