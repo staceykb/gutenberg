@@ -43,3 +43,37 @@ function gutenberg_register_gutenberg_rest_block_patterns() {
 	$block_patterns->register_routes();
 }
 add_action( 'rest_api_init', 'gutenberg_register_gutenberg_rest_block_patterns', 100 );
+
+/**
+ * Returns the has_archive post type field.
+ *
+ * @param array $type              The response data.
+ * @param string $field_name       $field_name The field name. The function handles field has_archive.
+ * @param WP_REST_Request $request The wp rest request object.
+ */
+function gutenberg_get_post_type_has_archive_field( $type, $field_name, $request ) {
+	if( ! empty( $type ) && ! empty( $type['slug'] ) && 'has_archive' === $field_name ) {
+		$post_type_object = get_post_type_object( $type['slug'] );
+		return $post_type_object->has_archive;
+	}
+}
+
+/**
+ * Registers the has_archive post type REST API field.
+ */
+function gutenberg_register_has_archive_on_post_types_endpoint() {
+	register_rest_field(
+		'type',
+		'has_archive',
+		array(
+			'get_callback' => 'gutenberg_get_post_type_has_archive_field',
+			'schema'       => array(
+				'description' => __( 'If the value is a string, the value will be used as the archive slug. If the value is false the post type has no archive.', 'gutenberg' ),
+				'type'        => array( 'string', 'boolean' ),
+				'context'     => array( 'view', 'edit' )
+			)
+		)
+	);
+}
+add_action( 'rest_api_init', 'gutenberg_register_has_archive_on_post_types_endpoint' );
+
