@@ -1,5 +1,6 @@
 .components-drop-zone {
 	position: absolute;
+	display: block;
 	top: 0;
 	right: 0;
 	bottom: 0;
@@ -30,6 +31,16 @@
 	z-index: z-index(".components-drop-zone__content");
 	text-align: center;
 	color: $white;
+}
+
+.components-drop-zone__content-foreground {
+	height: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: $grid-unit-05;
 }
 
 .components-drop-zone__content-icon,

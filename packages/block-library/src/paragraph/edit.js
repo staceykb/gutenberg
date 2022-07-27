@@ -11,6 +11,7 @@ import {
 	ToolbarButton,
 	ToggleControl,
 	__experimentalToolsPanelItem as ToolsPanelItem,
+	DropZone,
 } from '@wordpress/components';
 import {
 	AlignmentControl,
@@ -19,9 +20,12 @@ import {
 	RichText,
 	useBlockProps,
 	useSetting,
+	store as blockEditorStore,
 } from '@wordpress/block-editor';
+import { useDispatch } from '@wordpress/data';
 import { createBlock } from '@wordpress/blocks';
 import { formatLtr } from '@wordpress/icons';
+import { createBlobURL } from '@wordpress/blob';
 
 /**
  * Internal dependencies
@@ -63,6 +67,7 @@ function ParagraphBlock( {
 		} ),
 		style: { direction },
 	} );
+	const { replaceBlock } = useDispatch( blockEditorStore );
 
 	return (
 		<>
@@ -108,35 +113,8 @@ function ParagraphBlock( {
 					</ToolsPanelItem>
 				</InspectorControls>
 			) }
-			<RichText
-				identifier="content"
-				tagName="p"
+			<p
 				{ ...blockProps }
-				value={ content }
-				onChange={ ( newContent ) =>
-					setAttributes( { content: newContent } )
-				}
-				onSplit={ ( value, isOriginal ) => {
-					let newAttributes;
-
-					if ( isOriginal || value ) {
-						newAttributes = {
-							...attributes,
-							content: value,
-						};
-					}
-
-					const block = createBlock( name, newAttributes );
-
-					if ( isOriginal ) {
-						block.clientId = clientId;
-					}
-
-					return block;
-				} }
-				onMerge={ mergeBlocks }
-				onReplace={ onReplace }
-				onRemove={ onRemove }
 				aria-label={
 					content
 						? __( 'Paragraph block' )
@@ -145,10 +123,58 @@ function ParagraphBlock( {
 						  )
 				}
 				data-empty={ content ? false : true }
-				placeholder={ placeholder || __( 'Type / to choose a block' ) }
-				__unstableEmbedURLOnPaste
-				__unstableAllowPrefixTransformations
-			/>
+			>
+				{ ! content && (
+					<DropZone
+						onFilesDrop={ ( files ) => {
+							if ( files.length === 1 ) {
+								replaceBlock(
+									clientId,
+									createBlock( 'core/image', {
+										url: createBlobURL( files[ 0 ] ),
+									} )
+								);
+							}
+
+							// TODO: We can handle other file types and sizes here.
+						} }
+					/>
+				) }
+				<RichText
+					identifier="content"
+					tagName="span"
+					value={ content }
+					onChange={ ( newContent ) =>
+						setAttributes( { content: newContent } )
+					}
+					onSplit={ ( value, isOriginal ) => {
+						let newAttributes;
+
+						if ( isOriginal || value ) {
+							newAttributes = {
+								...attributes,
+								content: value,
+							};
+						}
+
+						const block = createBlock( name, newAttributes );
+
+						if ( isOriginal ) {
+							block.clientId = clientId;
+						}
+
+						return block;
+					} }
+					onMerge={ mergeBlocks }
+					onReplace={ onReplace }
+					onRemove={ onRemove }
+					placeholder={
+						placeholder || __( 'Type / to choose a block' )
+					}
+					__unstableEmbedURLOnPaste
+					__unstableAllowPrefixTransformations
+				/>
+			</p>
 		</>
 	);
 }
