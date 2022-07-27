@@ -126,13 +126,14 @@ function Navigation( {
 			flexWrap = 'wrap',
 		} = {},
 		hasIcon,
+		slug,
 	} = attributes;
 
 	const ref = attributes.ref;
 
 	const registry = useRegistry();
-	const setRef = ( postId ) => {
-		setAttributes( { ref: postId } );
+	const setRef = ( postSlug ) => {
+		setAttributes( { ref: postSlug } );
 	};
 
 	const [ hasAlreadyRendered, RecursionProvider ] = useNoRecursiveRenders(
@@ -152,7 +153,7 @@ function Navigation( {
 			name: 'block-library/core/navigation/create',
 		} );
 
-	useSelect(
+	const generatedTemplatePartHierarchySlug = useSelect(
 		( select ) => {
 			// Use the lack of a clientId as an opportunity to bypass the rest
 			// of this hook.
@@ -201,7 +202,7 @@ function Navigation( {
 		}
 
 		if ( createNavigationMenuStatus === CREATE_NAVIGATION_MENU_SUCCESS ) {
-			setRef( createNavigationMenuPost.id );
+			setRef( createNavigationMenuPost.slug );
 			selectBlock( clientId );
 
 			showNavigationMenuCreateNotice(
@@ -298,7 +299,7 @@ function Navigation( {
 			return;
 		}
 
-		setRef( navigationMenus[ 0 ].id );
+		setRef( navigationMenus[ 0 ].slug );
 	}, [ navigationMenus ] );
 
 	const navRef = useRef();
@@ -420,8 +421,8 @@ function Navigation( {
 		name: 'block-library/core/navigation/classic-menu-conversion/error',
 	} );
 
-	function handleUpdateMenu( menuId ) {
-		setRef( menuId );
+	function handleUpdateMenu( menuRef ) {
+		setRef( menuRef );
 		selectBlock( clientId );
 	}
 
@@ -434,7 +435,7 @@ function Navigation( {
 			classicMenuConversionStatus === CLASSIC_MENU_CONVERSION_SUCCESS &&
 			classicMenuConversionResult
 		) {
-			handleUpdateMenu( classicMenuConversionResult?.id );
+			handleUpdateMenu( classicMenuConversionResult?.slug );
 			hideClassicMenuConversionErrorNotice();
 			speak( __( 'Classic menu imported successfully.' ) );
 		}
@@ -543,7 +544,7 @@ function Navigation( {
 			if ( isClassicMenu ) {
 				convert( navPostOrClassicMenu.id, navPostOrClassicMenu.name );
 			} else {
-				handleUpdateMenu( navPostOrClassicMenu.id );
+				handleUpdateMenu( navPostOrClassicMenu.slug );
 			}
 			setShouldFocusNavigationSelector( true );
 		},
@@ -749,7 +750,7 @@ function Navigation( {
 							// Set some state used as a guard to prevent the creation of multiple posts.
 							setHasSavedUnsavedInnerBlocks( true );
 							// Switch to using the wp_navigation entity.
-							setRef( post.id );
+							setRef( post.slug );
 
 							showNavigationMenuCreateNotice(
 								__( `New Navigation Menu created.` )
@@ -804,7 +805,13 @@ function Navigation( {
 						isResolvingCanUserCreateNavigationMenu
 					}
 					onFinish={ handleSelectNavigation }
-					onCreateEmpty={ () => createNavigationMenu( '', [] ) }
+					onCreateEmpty={ () =>
+						createNavigationMenu(
+							'',
+							[],
+							generatedTemplatePartHierarchySlug
+						)
+					}
 				/>
 			</TagName>
 		);
