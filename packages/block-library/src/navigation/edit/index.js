@@ -152,6 +152,37 @@ function Navigation( {
 			name: 'block-library/core/navigation/create',
 		} );
 
+	useSelect(
+		( select ) => {
+			// Use the lack of a clientId as an opportunity to bypass the rest
+			// of this hook.
+			if ( ! clientId ) {
+				return;
+			}
+
+			const { getBlock, getBlockParentsByBlockName } =
+				select( blockEditorStore );
+
+			const withAscendingResults = true;
+			const parentTemplatePartClientIds = getBlockParentsByBlockName(
+				clientId,
+				'core/template-part',
+				withAscendingResults
+			);
+
+			let result = parentTemplatePartClientIds.map(
+				( templatePartClientId ) => {
+					return getBlock( templatePartClientId )?.attributes?.slug;
+				}
+			);
+
+			result = result.join( '-' ).trim();
+
+			return result;
+		},
+		[ clientId ]
+	);
+
 	const {
 		create: createNavigationMenu,
 		status: createNavigationMenuStatus,
