@@ -6,12 +6,14 @@ import classnames from 'classnames';
 /**
  * WordPress dependencies
  */
+import { useRef } from '@wordpress/element';
 import { __, _x, isRTL } from '@wordpress/i18n';
 import {
 	ToolbarButton,
 	ToggleControl,
 	__experimentalToolsPanelItem as ToolsPanelItem,
 	DropZone,
+	Popover,
 } from '@wordpress/components';
 import {
 	AlignmentControl,
@@ -23,6 +25,7 @@ import {
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
 import { useDispatch } from '@wordpress/data';
+import { useMergeRefs } from '@wordpress/compose';
 import { createBlock } from '@wordpress/blocks';
 import { formatLtr } from '@wordpress/icons';
 import { createBlobURL } from '@wordpress/blob';
@@ -59,8 +62,9 @@ function ParagraphBlock( {
 } ) {
 	const { align, content, direction, dropCap, placeholder } = attributes;
 	const isDropCapFeatureEnabled = useSetting( 'typography.dropCap' );
+	const ref = useRef();
 	const blockProps = useBlockProps( {
-		ref: useOnEnter( { clientId, content } ),
+		ref: useMergeRefs( [ useOnEnter( { clientId, content } ), ref ] ),
 		className: classnames( {
 			'has-drop-cap': dropCap,
 			[ `has-text-align-${ align }` ]: align,
@@ -113,19 +117,21 @@ function ParagraphBlock( {
 					</ToolsPanelItem>
 				</InspectorControls>
 			) }
-			<p
-				{ ...blockProps }
-				aria-label={
-					content
-						? __( 'Paragraph block' )
-						: __(
-								'Empty block; start writing or type forward slash to choose a block'
-						  )
-				}
-				data-empty={ content ? false : true }
-			>
-				{ ! content && (
+			{ ! content && (
+				<Popover
+					anchorRef={ ref.current }
+					animate={ false }
+					position="top right left"
+					focusOnMount={ false }
+					__unstableForcePosition
+					className="wp-block-paragraph__drop_zone"
+				>
 					<DropZone
+						style={ {
+							// TODO: Ideally we should observe the size of the paragraph block.
+							width: ref.current?.offsetWidth,
+							height: ref.current?.offsetHeight,
+						} }
 						onFilesDrop={ ( files ) => {
 							if ( files.length === 1 ) {
 								replaceBlock(
@@ -139,42 +145,49 @@ function ParagraphBlock( {
 							// TODO: We can handle other file types and sizes here.
 						} }
 					/>
-				) }
-				<RichText
-					identifier="content"
-					tagName="span"
-					value={ content }
-					onChange={ ( newContent ) =>
-						setAttributes( { content: newContent } )
+				</Popover>
+			) }
+			<RichText
+				identifier="content"
+				tagName="p"
+				{ ...blockProps }
+				value={ content }
+				onChange={ ( newContent ) =>
+					setAttributes( { content: newContent } )
+				}
+				onSplit={ ( value, isOriginal ) => {
+					let newAttributes;
+
+					if ( isOriginal || value ) {
+						newAttributes = {
+							...attributes,
+							content: value,
+						};
 					}
-					onSplit={ ( value, isOriginal ) => {
-						let newAttributes;
 
-						if ( isOriginal || value ) {
-							newAttributes = {
-								...attributes,
-								content: value,
-							};
-						}
+					const block = createBlock( name, newAttributes );
 
-						const block = createBlock( name, newAttributes );
-
-						if ( isOriginal ) {
-							block.clientId = clientId;
-						}
-
-						return block;
-					} }
-					onMerge={ mergeBlocks }
-					onReplace={ onReplace }
-					onRemove={ onRemove }
-					placeholder={
-						placeholder || __( 'Type / to choose a block' )
+					if ( isOriginal ) {
+						block.clientId = clientId;
 					}
-					__unstableEmbedURLOnPaste
-					__unstableAllowPrefixTransformations
-				/>
-			</p>
+
+					return block;
+				} }
+				onMerge={ mergeBlocks }
+				onReplace={ onReplace }
+				onRemove={ onRemove }
+				aria-label={
+					content
+						? __( 'Paragraph block' )
+						: __(
+								'Empty block; start writing or type forward slash to choose a block'
+						  )
+				}
+				data-empty={ content ? false : true }
+				placeholder={ placeholder || __( 'Type / to choose a block' ) }
+				__unstableEmbedURLOnPaste
+				__unstableAllowPrefixTransformations
+			/>
 		</>
 	);
 }

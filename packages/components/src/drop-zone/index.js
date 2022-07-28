@@ -30,6 +30,7 @@ export default function DropZoneComponent( {
 	onFilesDrop,
 	onHTMLDrop,
 	onDrop,
+	...props
 } ) {
 	const [ isDraggingOverDocument, setIsDraggingOverDocument ] = useState();
 	const [ isDraggingOverElement, setIsDraggingOverElement ] = useState();
@@ -118,14 +119,14 @@ export default function DropZoneComponent( {
 
 	if ( isDraggingOverElement ) {
 		children = (
-			<motion.span
+			<motion.div
 				variants={ backdrop }
 				initial={ disableMotion ? 'show' : 'hidden' }
 				animate="show"
 				exit={ disableMotion ? 'show' : 'exit' }
 				className="components-drop-zone__content"
 			>
-				<motion.span
+				<motion.div
 					variants={ foreground }
 					className="components-drop-zone__content-foreground"
 				>
@@ -136,8 +137,8 @@ export default function DropZoneComponent( {
 					<span className="components-drop-zone__content-text">
 						{ label ? label : __( 'Drop files to upload' ) }
 					</span>
-				</motion.span>
-			</motion.span>
+				</motion.div>
+			</motion.div>
 		);
 	}
 
@@ -153,12 +154,12 @@ export default function DropZoneComponent( {
 	} );
 
 	return (
-		<span ref={ ref } className={ classes }>
+		<div ref={ ref } className={ classes } { ...props }>
 			{ disableMotion ? (
 				children
 			) : (
 				<AnimatePresence>{ children }</AnimatePresence>
 			) }
-		</span>
+		</div>
 	);
 }

@@ -1,6 +1,5 @@
 .components-drop-zone {
 	position: absolute;
-	display: block;
 	top: 0;
 	right: 0;
 	bottom: 0;
@@ -9,10 +8,12 @@
 	visibility: hidden;
 	opacity: 0;
 	border-radius: $radius-block-ui;
+	pointer-events: none;
 
 	&.is-active {
 		opacity: 1;
 		visibility: visible;
+		pointer-events: auto;
 	}
 }
 
