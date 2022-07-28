@@ -88,24 +88,17 @@ function selectExistingMenu( select, ref ) {
 		};
 	}
 
-	const { getEntityRecords, getEditedEntityRecords, hasFinishedResolution } =
+	const { getEntityRecord, getEditedEntityRecord, hasFinishedResolution } =
 		select( coreStore );
 
-	const args = [
-		'postType',
-		'wp_navigation',
-		{
-			slug: ref, // ref is the post.slug field
-		},
-	];
-	const navigationMenu = getEntityRecords( ...args )[ 0 ];
-	const editedNavigationMenu = getEditedEntityRecords( ...args )[ 0 ];
+	const args = [ 'postType', 'wp_navigation', ref ];
+	const navigationMenu = getEntityRecord( ...args );
+	const editedNavigationMenu = getEditedEntityRecord( ...args );
 	const hasResolvedNavigationMenu = hasFinishedResolution(
-		'getEditedEntityRecords',
+		'getEntityRecord',
 		args
 	);
 
-	console.log( { navigationMenu } );
 	return {
 		isNavigationMenuResolved: hasResolvedNavigationMenu,
 		isNavigationMenuMissing: hasResolvedNavigationMenu && ! navigationMenu,
