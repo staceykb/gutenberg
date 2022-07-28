@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### New Features
+
+-   Paragraph block: You can now drag an image on an empty Paragraph block to create an image block ([#42722](https://github.com/WordPress/gutenberg/pull/42722)).
+
 ## 7.11.0 (2022-07-27)
 
 ## 7.10.0 (2022-07-13)
