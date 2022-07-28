@@ -80,6 +80,7 @@
 		"src/scrollable/**/*",
 		"src/select-control/**/*",
 		"src/shortcut/**/*",
+		"src/slider-control/**/*",
 		"src/slot-fill/**/*",
 		"src/style-provider/**/*",
 		"src/spacer/**/*",
