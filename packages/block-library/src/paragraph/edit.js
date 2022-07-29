@@ -6,7 +6,7 @@ import classnames from 'classnames';
 /**
  * WordPress dependencies
  */
-import { useRef } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import { __, _x, isRTL } from '@wordpress/i18n';
 import {
 	ToolbarButton,
@@ -62,9 +62,15 @@ function ParagraphBlock( {
 } ) {
 	const { align, content, direction, dropCap, placeholder } = attributes;
 	const isDropCapFeatureEnabled = useSetting( 'typography.dropCap' );
-	const ref = useRef();
+	const [ paragraphElement, setParagraphElement ] = useState( null );
+	const refCallback = ( element ) => {
+		setParagraphElement( element );
+	};
 	const blockProps = useBlockProps( {
-		ref: useMergeRefs( [ useOnEnter( { clientId, content } ), ref ] ),
+		ref: useMergeRefs( [
+			useOnEnter( { clientId, content } ),
+			refCallback,
+		] ),
 		className: classnames( {
 			'has-drop-cap': dropCap,
 			[ `has-text-align-${ align }` ]: align,
@@ -119,7 +125,7 @@ function ParagraphBlock( {
 			) }
 			{ ! content && (
 				<Popover
-					anchorRef={ ref.current }
+					anchorRef={ paragraphElement }
 					animate={ false }
 					position="top right left"
 					focusOnMount={ false }
@@ -129,8 +135,8 @@ function ParagraphBlock( {
 					<DropZone
 						style={ {
 							// TODO: Ideally we should observe the size of the paragraph block.
-							width: ref.current?.offsetWidth,
-							height: ref.current?.offsetHeight,
+							width: paragraphElement?.offsetWidth,
+							height: paragraphElement?.offsetHeight,
 						} }
 						onFilesDrop={ ( files ) => {
 							if ( files.length === 1 ) {

@@ -2,7 +2,6 @@
  * External dependencies
  */
 const path = require( 'path' );
-const fs = require( 'fs/promises' );
 
 /**
  * WordPress dependencies
@@ -49,45 +48,35 @@ test.describe( 'Paragraph', () => {
 	test( 'should allow dropping an image on en empty paragraph block', async ( {
 		editor,
 		page,
+		pageUtils,
 	} ) => {
 		await editor.insertBlock( { name: 'core/paragraph' } );
 		const emptyParagraphBlock = page.locator(
 			'[data-type="core/paragraph"]'
 		);
 
+		const testImageName = '10x10_e2e_test_image_z9T8jK.png';
 		const testImagePath = path.join(
 			__dirname,
-			'../../../assets/10x10_e2e_test_image_z9T8jK.png'
-		);
-		const testImage = await fs.readFile( testImagePath, 'base64' );
-		const dataTransfer = await page.evaluateHandle(
-			async ( [ base64 ] ) => {
-				const blobResponse = await window.fetch(
-					`data:image/png;base64,${ base64 }`
-				);
-				const blob = await blobResponse.blob();
-				const file = new window.File( [ blob ], 'test-image.png', {
-					type: 'image/png',
-				} );
-				const dt = new window.DataTransfer();
-				dt.items.add( file );
-				return dt;
-			},
-			[ testImage ]
+			'../../../assets',
+			testImageName
 		);
 
-		const dropZone = emptyParagraphBlock.locator(
-			'[data-is-drop-zone="true"]'
-		);
-		// Simulate dragging from outside the browser.
-		await page.dispatchEvent( 'html', 'dragenter', { dataTransfer } );
-		await dropZone.dispatchEvent( 'dragenter', { dataTransfer } );
+		const { dragTo, drop } = await pageUtils.dragFiles( testImagePath );
+
+		const { x, y, width, height } = await emptyParagraphBlock.boundingBox();
+		const centerPosition = {
+			x: x + width / 2,
+			y: y + height / 2,
+		};
+
+		await dragTo( centerPosition.x, centerPosition.y );
 
 		await expect(
-			emptyParagraphBlock.locator( 'text="Drop files to upload"' )
+			page.locator( 'text="Drop files to upload"' )
 		).toBeVisible();
 
-		await dropZone.dispatchEvent( 'drop', { dataTransfer } );
+		await drop();
 
 		const imageBlock = page.locator(
 			'role=document[name="Block: Image"i]'
@@ -95,7 +84,7 @@ test.describe( 'Paragraph', () => {
 		await expect( imageBlock ).toBeVisible();
 		await expect( imageBlock.locator( 'role=img' ) ).toHaveAttribute(
 			'src',
-			/test-image\.png$/
+			new RegExp( testImageName.replace( '.', '\\.' ) )
 		);
 	} );
 } );
