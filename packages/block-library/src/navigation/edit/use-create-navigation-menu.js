@@ -66,7 +66,9 @@ export default function useCreateNavigationMenu( clientId ) {
 			};
 
 			// Return affords ability to await on this function directly
-			return saveEntityRecord( 'postType', 'wp_navigation', record )
+			return saveEntityRecord( 'postType', 'wp_navigation', record, {
+				forceCreate: true,
+			} )
 				.then( ( response ) => {
 					setValue( response );
 					setStatus( CREATE_NAVIGATION_MENU_SUCCESS );
