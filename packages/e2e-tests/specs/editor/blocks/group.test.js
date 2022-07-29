@@ -75,4 +75,41 @@ describe( 'Group', () => {
 			<!-- /wp:paragraph -->"
 		` );
 	} );
+
+	it( 'can merge into group with Backspace', async () => {
+		await clickBlockAppender();
+		await page.keyboard.type( '1' );
+		await transformBlockTo( 'Group' );
+		await page.keyboard.press( 'Enter' );
+		await page.keyboard.type( '2' );
+
+		// Confirm last paragraph is outside of group.
+		expect( await getEditedPostContent() ).toMatchInlineSnapshot( `
+			"<!-- wp:group -->
+			<div class=\\"wp-block-group\\"><!-- wp:paragraph -->
+			<p>1</p>
+			<!-- /wp:paragraph --></div>
+			<!-- /wp:group -->
+
+			<!-- wp:paragraph -->
+			<p>2</p>
+			<!-- /wp:paragraph -->"
+		` );
+
+		// Merge the last paragraph into the group.
+		await page.keyboard.press( 'ArrowLeft' );
+		await page.keyboard.press( 'Backspace' );
+
+		expect( await getEditedPostContent() ).toMatchInlineSnapshot( `
+			"<!-- wp:group -->
+			<div class=\\"wp-block-group\\"><!-- wp:paragraph -->
+			<p>1</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p>2</p>
+			<!-- /wp:paragraph --></div>
+			<!-- /wp:group -->"
+		` );
+	} );
 } );
