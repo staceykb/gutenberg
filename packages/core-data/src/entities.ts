@@ -441,6 +441,7 @@ async function loadPostTypeEntities() {
 		const isTemplate = [ 'wp_template', 'wp_template_part' ].includes(
 			name
 		);
+
 		const namespace = postType?.rest_namespace ?? 'wp/v2';
 		return {
 			kind: 'postType',
@@ -460,6 +461,9 @@ async function loadPostTypeEntities() {
 				( isTemplate ? startCase( record.slug ) : String( record.id ) ),
 			__unstablePrePersist: isTemplate ? undefined : prePersistPostType,
 			__unstable_rest_base: postType.rest_base,
+			...( name === `wp_navigation` && {
+				key: 'slug',
+			} ),
 		};
 	} );
 }
