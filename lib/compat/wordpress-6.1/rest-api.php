@@ -66,11 +66,11 @@ add_filter( 'register_post_type_args', 'gutenberg_update_navigation_rest_control
  * @param array $schema the post schema data.
  * @return array the filtered post schema data.
  */
-function gutenberg_order_rest_post_by_post_title( $schema ) {
+function gutenberg_update_navigation_rest_schema( $schema ) {
 
 	$schema['properties']['id']['type']        = 'string';
 	$schema['properties']['id']['description'] = __( 'The slug identifier for a Navigation', 'gutenberg' );
 
 	return $schema;
 }
-add_filter( 'rest_wp_navigation_item_schema', 'gutenberg_order_rest_post_by_post_title', 10, 1 );
+add_filter( 'rest_wp_navigation_item_schema', 'gutenberg_update_navigation_rest_schema', 10, 1 );
