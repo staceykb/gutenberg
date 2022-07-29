@@ -107,7 +107,13 @@ export function reinitializeEditor( target, settings ) {
 		}
 	}
 
-	render( <EditSiteApp reboot={ reboot } />, target );
+	render(
+		<EditSiteApp
+			reboot={ reboot }
+			homeTemplate={ settings.__unstableHomeTemplate }
+		/>,
+		target
+	);
 }
 
 /**
