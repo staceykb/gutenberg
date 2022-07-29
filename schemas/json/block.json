@@ -478,7 +478,15 @@
 				{
 					"type": "array",
 					"items": {
-						"type": "string"
+						"description": "Block style defined in JSON.",
+						"oneOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array"
+							}
+						]
 					}
 				}
 			]
