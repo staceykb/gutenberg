@@ -681,6 +681,7 @@ _Parameters_
 -   _options.isAutosave_ `[boolean]`: Whether this is an autosave.
 -   _options.\_\_unstableFetch_ `[Function]`: Internal use only. Function to call instead of `apiFetch()`. Must return a promise.
 -   _options.throwOnError_ `[boolean]`: If false, this action suppresses all the exceptions. Defaults to false.
+-   _options.forceCreate_ `[boolean]`: Whether or not to force a POST request.
 
 ### undo
 
