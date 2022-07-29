@@ -57,3 +57,20 @@ function gutenberg_update_navigation_rest_controller( $args, $post_type ) {
 add_filter( 'register_post_type_args', 'gutenberg_update_navigation_rest_controller', 10, 2 );
 
 
+
+
+/**
+ * Modify `id` in post schema for `wp_navigation` posts (only) to conform
+ * to string-based slug identifier.
+ *
+ * @param array $schema the post schema data.
+ * @return array the filtered post schema data.
+ */
+function gutenberg_order_rest_post_by_post_title( $schema ) {
+
+	$schema['properties']['id']['type']        = 'string';
+	$schema['properties']['id']['description'] = __( 'The slug identifier for a Navigation', 'gutenberg' );
+
+	return $schema;
+}
+add_filter( 'rest_wp_navigation_item_schema', 'gutenberg_order_rest_post_by_post_title', 10, 1 );
