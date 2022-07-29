@@ -95,7 +95,7 @@ function selectExistingMenu( select, ref ) {
 	const navigationMenu = getEntityRecord( ...args );
 	const editedNavigationMenu = getEditedEntityRecord( ...args );
 	const hasResolvedNavigationMenu = hasFinishedResolution(
-		'getEntityRecord',
+		'getEditedEntityRecord',
 		args
 	);
 
