@@ -26,64 +26,87 @@ class Gutenberg_REST_Navigation_Controller extends WP_REST_Posts_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\/\w\d-]+)',
 			array(
+				'args'        => array(
+					'id' => array(
+						'description' => __( 'The slug identifier for a Navigation', 'gutenberg' ),
+						'type'        => 'string',
+					),
+				),
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
+				),
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 					'args'                => array(
-						'id' => array(
-							'description' => __( 'The slug identifier for a avigation', 'gutenberg' ),
-							'type'        => 'string',
+						'force' => array(
+							'type'        => 'boolean',
+							'default'     => false,
+							'description' => __( 'Whether to bypass Trash and force deletion.' ),
 						),
 					),
 				),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_public_item_schema' ),
 			)
 		);
 	}
 
 
+
 	/**
-	 * Overide WP_REST_Posts_Controller function to query for
+	 * Overide WP_REST_Posts_Controller parent function to query for
 	 * `wp_navigation` posts by post_name / slug instead of ID.
+	 *
+	 * This allows all the permission check handlers to find the WP_Post
+	 * from the $request['id'] and continue as per their implementations
+	 * in WP_REST_Posts_Controller therefore avoiding us overloading them
+	 * in this class.
 	 *
 	 * @param string $id the slug of the Navigation post.
 	 * @return WP_Post|null
 	 */
 	protected function get_post( $id ) {
 
-		$error = new WP_Error(
-			'rest_post_invalid_id',
-			__( 'Invalid post ID.' ),
-			array( 'status' => 404 )
-		);
-
 		if ( ! is_string( $id ) ) {
 			return new WP_Error(
 				'rest_post_invalid_id',
-				__( 'Invalid post ID.' ),
+				__( 'Invalid navigation ID (slug).' ),
 				array( 'status' => 404 )
 			);
 		}
 
 		$args = array(
-			'name'           => $id, // query by slug
-			'post_type'      => array( $this->post_type ),
-			'nopaging'       => true,
-			'posts_per_page' => '-1',
+			'name'                   => $id, // query by slug
+			'post_type'              => $this->post_type,
+			'nopaging'               => true,
+			'posts_per_page'         => '-1',
+			'update_post_term_cache' => false,
+			'no_found_rows'          => false,
 		);
 
 		// The Query
-		$post = new WP_Query( $args );
+		$query = new WP_Query( $args );
 
-		if ( empty( $post ) || empty( $post->post->ID ) || $this->post_type !== $post->post->post_type ) {
+		if ( empty( $query ) || empty( $query->post->ID ) || $this->post_type !== $query->post->post_type ) {
 			return new WP_Error(
 				'rest_post_not_found',
-				__( 'No post found.' ),
+				__( 'No navigation found.' ),
 				array( 'status' => 404 )
 			);
 		}
 
-		return $post->post;
+		return $query->post;
 	}
 
 
