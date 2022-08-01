@@ -12,11 +12,13 @@ import { hasBlockSupport } from '@wordpress/blocks';
  * @return {Object} Filtered block settings.
  */
 export function addLabelCallback( settings ) {
-	// If labels provide their own label callback, do not override it.
+	// If blocks provide their own label callback, do not override it.
 	if ( settings.__experimentalLabel ) {
 		return settings;
 	}
-	if ( hasBlockSupport( settings, '__experimentalLabel' ) ) {
+
+	// Check whether block metadata is supported before using it.
+	if ( hasBlockSupport( settings, '__experimentalMetadata' ) ) {
 		settings.__experimentalLabel = ( attributes, { context } ) => {
 			const { __experimentalMetadata: meta } = attributes;
 

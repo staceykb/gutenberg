@@ -19,7 +19,6 @@
 	},
 	"supports": {
 		"__experimentalMetadata": true,
-		"__experimentalLabel": true,
 		"__experimentalOnEnter": true,
 		"__experimentalSettings": true,
 		"align": [ "wide", "full" ],
