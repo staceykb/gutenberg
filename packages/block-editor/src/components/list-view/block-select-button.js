@@ -62,11 +62,12 @@ function ListViewBlockSelectButton(
 	const { isLocked } = useBlockLock( clientId );
 	const { updateBlockAttributes } = useDispatch( blockEditorStore );
 
-	const { blockName } = useSelect(
+	const { blockName, blockAttributes } = useSelect(
 		( select ) => {
 			const blockObject = select( blockEditorStore ).getBlock( clientId );
 			return {
 				blockName: blockObject?.name,
+				blockAttributes: blockObject?.attributes,
 			};
 		},
 		[ clientId ]
@@ -116,7 +117,10 @@ function ListViewBlockSelectButton(
 				if ( event.keyCode === ENTER ) {
 					// Submit changes only for ENTER.
 					updateBlockAttributes( clientId, {
+						// Include existing metadata (if present) to avoid overwriting existing.
 						__experimentalMetadata: {
+							...( blockAttributes?.__experimentalMetadata &&
+								blockAttributes?.__experimentalMetadata ),
 							name: inputValue,
 						},
 					} );
