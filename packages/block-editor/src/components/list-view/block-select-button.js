@@ -57,6 +57,7 @@ function ListViewBlockSelectButton(
 		clientId,
 		context: 'list-view',
 	} );
+
 	const [ inputValue, setInputValue ] = useState( blockTitle );
 	const { isLocked } = useBlockLock( clientId );
 	const { updateBlockAttributes } = useDispatch( blockEditorStore );
@@ -133,11 +134,6 @@ function ListViewBlockSelectButton(
 		}
 	}, [ labelEditingMode ] );
 
-	const nodeLabel =
-		blockTitle === blockInformation?.title
-			? blockTitle
-			: `${ blockTitle } (${ blockInformation?.title })`;
-
 	return (
 		<>
 			<Button
@@ -203,7 +199,7 @@ function ListViewBlockSelectButton(
 							/>
 						) : (
 							<Truncate ellipsizeMode="auto">
-								{ nodeLabel }
+								{ blockTitle }
 							</Truncate>
 						) }
 					</span>
