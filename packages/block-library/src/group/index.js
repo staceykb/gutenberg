@@ -88,9 +88,9 @@ export const settings = {
 	__experimentalLabel( attributes, { context } ) {
 		const { meta } = attributes;
 
-		// In the list view, use the block's aliasattribute as the label.
-		if ( context === 'list-view' && meta?.alias ) {
-			return meta.alias;
+		// In the list view, use the block's metadata name attribute as the label.
+		if ( context === 'list-view' && meta?.name ) {
+			return meta.name;
 		}
 	},
 };

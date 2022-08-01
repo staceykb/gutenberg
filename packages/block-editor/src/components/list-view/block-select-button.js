@@ -116,7 +116,7 @@ function ListViewBlockSelectButton(
 					// Submit changes only for ENTER.
 					updateBlockAttributes( clientId, {
 						__experimentalMetadata: {
-							alias: inputValue,
+							name: inputValue,
 						},
 					} );
 				}
