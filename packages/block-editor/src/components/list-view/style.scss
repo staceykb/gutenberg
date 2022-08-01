@@ -122,8 +122,10 @@
 
 
 		&.has-block-naming-support {
-			&:hover,
-			&:focus {
+			// :focus ommitted as keyboard interaciton with editable
+			// is provided via an alternative control and cannot be
+			// accessed via double-click.
+			&:hover {
 				.block-editor-list-view-block-select-button__title .components-truncate {
 					background-color: rgba($black, 0.1);
 				}
@@ -132,9 +134,10 @@
 
 		.is-selected & {
 			&.has-block-naming-support {
-
-				&:hover,
-				&:focus {
+				// :focus ommitted as keyboard interaciton with editable
+				// is provided via an alternative control and cannot be
+				// accessed via double-click.
+				&:hover {
 					.block-editor-list-view-block-select-button__title .components-truncate {
 						background-color: rgba($white, 0.1);
 					}
