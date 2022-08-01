@@ -97,8 +97,8 @@ function ListViewBlockSelectButton(
 	function onKeyDownHandler( event ) {
 		// Handle default mode.
 		if (
-			( ! labelEditingMode && event.keyCode === ENTER ) ||
-			event.keyCode === SPACE
+			! labelEditingMode &&
+			( event.keyCode === ENTER || event.keyCode === SPACE )
 		) {
 			onClick( event );
 		}
