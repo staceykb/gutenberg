@@ -240,7 +240,7 @@ export const SETTINGS_DEFAULTS = {
 		},
 	],
 
-	meta: {},
+	__experimentalMetadata: {},
 
 	__unstableResolvedAssets: { styles: [], scripts: [] },
 };
