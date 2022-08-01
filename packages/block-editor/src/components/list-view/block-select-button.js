@@ -15,7 +15,8 @@ import {
 import { forwardRef, useRef, useState, useEffect } from '@wordpress/element';
 import { Icon, lock } from '@wordpress/icons';
 import { SPACE, ENTER, ESCAPE } from '@wordpress/keycodes';
-import { useDispatch } from '@wordpress/data';
+import { useSelect, useDispatch } from '@wordpress/data';
+import { hasBlockSupport } from '@wordpress/blocks';
 
 /**
  * Internal dependencies
@@ -33,7 +34,7 @@ const DOUBLE_CLICK = 2;
 function ListViewBlockSelectButton(
 	{
 		className,
-		block: { clientId },
+		block,
 		onClick,
 		onToggleExpanded,
 		tabIndex,
@@ -44,8 +45,11 @@ function ListViewBlockSelectButton(
 	},
 	ref
 ) {
+	const { clientId } = block;
 	const clickHandlerTimer = useRef();
 	const inputRef = useRef();
+
+	// Setting managed via `toggleLabelEditingMode` handler.
 	const [ labelEditingMode, setLabelEditingMode ] = useState( false );
 
 	const blockInformation = useBlockDisplayInformation( clientId );
@@ -56,6 +60,30 @@ function ListViewBlockSelectButton(
 	const [ inputValue, setInputValue ] = useState( blockTitle );
 	const { isLocked } = useBlockLock( clientId );
 	const { updateBlockAttributes } = useDispatch( blockEditorStore );
+
+	const { blockName } = useSelect(
+		( select ) => {
+			const blockObject = select( blockEditorStore ).getBlock( clientId );
+			return {
+				blockName: blockObject?.name,
+			};
+		},
+		[ clientId ]
+	);
+
+	const supportsBlockNaming = hasBlockSupport(
+		blockName,
+		'__experimentalMetadata',
+		false
+	);
+
+	const toggleLabelEditingMode = ( value ) => {
+		if ( ! supportsBlockNaming ) {
+			return;
+		}
+
+		setLabelEditingMode( value );
+	};
 
 	// The `href` attribute triggers the browser's native HTML drag operations.
 	// When the link is dragged, the element's outerHTML is set in DataTransfer object as text/html.
@@ -87,12 +115,12 @@ function ListViewBlockSelectButton(
 				if ( event.keyCode === ENTER ) {
 					// Submit changes only for ENTER.
 					updateBlockAttributes( clientId, {
-						meta: {
+						__experimentalMetadata: {
 							alias: inputValue,
 						},
 					} );
 				}
-				setLabelEditingMode( false );
+				toggleLabelEditingMode( false );
 			}
 		}
 	}
@@ -115,9 +143,18 @@ function ListViewBlockSelectButton(
 			<Button
 				className={ classnames(
 					'block-editor-list-view-block-select-button',
-					className
+					className,
+					{
+						'has-block-naming-support': supportsBlockNaming,
+					}
 				) }
 				onClick={ ( event ) => {
+					// Avoid click delays for blocks that don't support naming interaction.
+					if ( ! supportsBlockNaming ) {
+						onClick( event );
+						return;
+					}
+
 					clearTimeout( clickHandlerTimer.current );
 
 					if ( labelEditingMode ) {
@@ -131,7 +168,7 @@ function ListViewBlockSelectButton(
 							onClick( event );
 						}, 200 );
 					} else if ( event.detail === DOUBLE_CLICK ) {
-						setLabelEditingMode( true );
+						toggleLabelEditingMode( true );
 					}
 				} }
 				onKeyDown={ onKeyDownHandler }
@@ -153,7 +190,7 @@ function ListViewBlockSelectButton(
 					spacing={ 1 }
 				>
 					<span className="block-editor-list-view-block-select-button__title">
-						{ labelEditingMode ? (
+						{ supportsBlockNaming && labelEditingMode ? (
 							<InputControl
 								ref={ inputRef }
 								value={ inputValue }
@@ -161,7 +198,7 @@ function ListViewBlockSelectButton(
 									setInputValue( nextValue ?? '' );
 								} }
 								onBlur={ () => {
-									setLabelEditingMode( false );
+									toggleLabelEditingMode( false );
 								} }
 							/>
 						) : (
