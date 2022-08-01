@@ -42,8 +42,8 @@ export function addMetaAttribute( blockTypeSettings ) {
 }
 
 export function addSaveProps( extraProps, blockType, attributes ) {
-	if ( hasBlockSupport( blockType, '__experimentalMeta' ) ) {
-		extraProps.__experimentalMeta = attributes.__experimentalMeta;
+	if ( hasBlockSupport( blockType, '__experimentalMetadata' ) ) {
+		extraProps.__experimentalMetadata = attributes.__experimentalMetadata;
 	}
 
 	return extraProps;
@@ -51,12 +51,12 @@ export function addSaveProps( extraProps, blockType, attributes ) {
 
 addFilter(
 	'blocks.registerBlockType',
-	'core/meta/addMetaAttribute',
+	'core/metadata/addMetaAttribute',
 	addMetaAttribute
 );
 
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'core/meta/save-props',
+	'core/metadata/save-props',
 	addSaveProps
 );

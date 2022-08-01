@@ -86,7 +86,7 @@ export const settings = {
 	deprecated,
 	variations,
 	__experimentalLabel( attributes, { context } ) {
-		const { meta } = attributes;
+		const { __experimentalMetadata: meta } = attributes;
 
 		// In the list view, use the block's metadata name attribute as the label.
 		if ( context === 'list-view' && meta?.name ) {
