@@ -14,7 +14,7 @@ import {
 } from '@wordpress/components';
 import { forwardRef, useRef, useState, useEffect } from '@wordpress/element';
 import { Icon, lock } from '@wordpress/icons';
-import { SPACE, ENTER } from '@wordpress/keycodes';
+import { SPACE, ENTER, ESCAPE } from '@wordpress/keycodes';
 import { useDispatch } from '@wordpress/data';
 
 /**
@@ -82,13 +82,16 @@ function ListViewBlockSelectButton(
 			// keys for navigation).
 			event.stopPropagation();
 
-			// Handle ENTER submits label edits.
-			if ( event.keyCode === ENTER ) {
-				updateBlockAttributes( clientId, {
-					meta: {
-						alias: inputValue,
-					},
-				} );
+			// Handle ENTER and ESC exits editing mode.
+			if ( event.keyCode === ENTER || event.keyCode === ESCAPE ) {
+				if ( event.keyCode === ENTER ) {
+					// Submit changes only for ENTER.
+					updateBlockAttributes( clientId, {
+						meta: {
+							alias: inputValue,
+						},
+					} );
+				}
 				setLabelEditingMode( false );
 			}
 		}
