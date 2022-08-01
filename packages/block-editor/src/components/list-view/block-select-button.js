@@ -67,25 +67,36 @@ function ListViewBlockSelectButton(
 	};
 
 	function onKeyDownHandler( event ) {
-		if ( labelEditingMode && event.keyCode === ENTER ) {
-			updateBlockAttributes( clientId, {
-				meta: {
-					alias: inputValue,
-				},
-			} );
-			setLabelEditingMode( false );
-			return;
+		// Handle default mode.
+		if (
+			( ! labelEditingMode && event.keyCode === ENTER ) ||
+			event.keyCode === SPACE
+		) {
+			onClick( event );
 		}
 
-		if ( event.keyCode === ENTER || event.keyCode === SPACE ) {
-			if ( ! labelEditingMode ) {
-				onClick( event );
+		// Handle Label editing mode.
+		if ( labelEditingMode ) {
+			// Trap events to input when editing to avoid
+			// default list view key handing (e.g. arrow
+			// keys for navigation).
+			event.stopPropagation();
+
+			// Handle ENTER submits label edits.
+			if ( event.keyCode === ENTER ) {
+				updateBlockAttributes( clientId, {
+					meta: {
+						alias: inputValue,
+					},
+				} );
+				setLabelEditingMode( false );
 			}
 		}
 	}
 
 	useEffect( () => {
 		if ( labelEditingMode ) {
+			// Focus and select all text on entering label editing mode.
 			inputRef?.current?.focus();
 			inputRef?.current?.select();
 		}
