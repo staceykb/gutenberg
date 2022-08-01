@@ -16,7 +16,7 @@ import { forwardRef, useRef, useState, useEffect } from '@wordpress/element';
 import { Icon, lock } from '@wordpress/icons';
 import { SPACE, ENTER, ESCAPE } from '@wordpress/keycodes';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { hasBlockSupport } from '@wordpress/blocks';
+import { hasBlockMetadataSupport } from '@wordpress/blocks';
 
 /**
  * Internal dependencies
@@ -73,9 +73,9 @@ function ListViewBlockSelectButton(
 		[ clientId ]
 	);
 
-	const supportsBlockNaming = hasBlockSupport(
+	const supportsBlockNaming = hasBlockMetadataSupport(
 		blockName,
-		'__experimentalMetadata',
+		'name',
 		false
 	);
 

@@ -2,7 +2,11 @@
  * WordPress dependencies
  */
 import { addFilter } from '@wordpress/hooks';
-import { hasBlockSupport } from '@wordpress/blocks';
+import { hasBlockMetadataSupport } from '@wordpress/blocks';
+
+/**
+ * Internal dependencies
+ */
 
 /**
  * Filters registered block settings, adding an `__experimentalLabel` callback if one does not already exist.
@@ -18,7 +22,7 @@ export function addLabelCallback( settings ) {
 	}
 
 	// Check whether block metadata is supported before using it.
-	if ( hasBlockSupport( settings, '__experimentalMetadata' ) ) {
+	if ( hasBlockMetadataSupport( settings, 'name' ) ) {
 		settings.__experimentalLabel = ( attributes, { context } ) => {
 			const { __experimentalMetadata: meta } = attributes;
 

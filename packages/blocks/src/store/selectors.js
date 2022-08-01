@@ -643,6 +643,26 @@ export function hasBlockSupport( state, nameOrType, feature, defaultSupports ) {
 	return !! getBlockSupport( state, nameOrType, feature, defaultSupports );
 }
 
+export function hasBlockMetadataSupport(
+	state,
+	nameOrType,
+	feature,
+	defaultSupports
+) {
+	const support = !! getBlockSupport(
+		state,
+		nameOrType,
+		'__experimentalMetadata',
+		defaultSupports
+	);
+
+	if ( support === true ) {
+		return true;
+	}
+
+	return !! support?.[ feature ];
+}
+
 /**
  * Returns true if the block type by the given name or object value matches a
  * search term, or false otherwise.

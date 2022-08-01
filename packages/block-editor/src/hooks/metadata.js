@@ -7,7 +7,7 @@ import { has } from 'lodash';
  * WordPress dependencies
  */
 import { addFilter } from '@wordpress/hooks';
-import { hasBlockSupport } from '@wordpress/blocks';
+import { hasBlockMetadataSupport } from '@wordpress/blocks';
 
 /**
  * Filters registered block settings, extending attributes to include `metadata`.
@@ -27,9 +27,7 @@ export function addMetaAttribute( blockTypeSettings ) {
 	) {
 		return blockTypeSettings;
 	}
-	if (
-		hasBlockSupport( blockTypeSettings, '__experimentalMetadata', false )
-	) {
+	if ( hasBlockMetadataSupport( blockTypeSettings ) ) {
 		blockTypeSettings.attributes = {
 			...blockTypeSettings.attributes,
 			__experimentalMetadata: {
@@ -42,7 +40,7 @@ export function addMetaAttribute( blockTypeSettings ) {
 }
 
 export function addSaveProps( extraProps, blockType, attributes ) {
-	if ( hasBlockSupport( blockType, '__experimentalMetadata' ) ) {
+	if ( hasBlockMetadataSupport( blockType ) ) {
 		extraProps.__experimentalMetadata = attributes.__experimentalMetadata;
 	}
 
