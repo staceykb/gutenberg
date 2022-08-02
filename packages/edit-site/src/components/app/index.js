@@ -1,14 +1,13 @@
 /**
  * WordPress dependencies
  */
-import { SlotFillProvider } from '@wordpress/components';
+import { SlotFillProvider, Spinner } from '@wordpress/components';
 import { Fragment, lazy, Suspense } from '@wordpress/element';
 import { UnsavedChangesWarning } from '@wordpress/editor';
 import { store as noticesStore } from '@wordpress/notices';
 import { useDispatch } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';
 import { PluginArea } from '@wordpress/plugins';
-import { Icon, wordpress } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -39,13 +38,7 @@ const LoadingScreen = () => (
 				height: '100%',
 			} }
 		>
-			<Icon
-				icon={ wordpress }
-				size="96"
-				style={ {
-					animation: 'loadingpulse 1s linear infinite',
-				} }
-			/>
+			<Spinner />
 		</div>
 	</div>
 );
