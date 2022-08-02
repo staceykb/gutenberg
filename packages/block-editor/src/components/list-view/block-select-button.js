@@ -144,7 +144,7 @@ function ListViewBlockSelectButton(
 
 	// The `isSelected` check ensures the `BlockSettingsMenuControls` fill
 	// doesn't render multiple times. The block controls has similar internal check.
-	const shouldRenderEditLabelMenuControl = isSelected && supportsBlockNaming;
+	const shouldRenderEditLabelMenuControl = isSelected;
 
 	return (
 		<>
@@ -231,6 +231,7 @@ function ListViewBlockSelectButton(
 					<BlockSettingsMenuControls>
 						{ () => (
 							<MenuItem
+								disabled={ ! supportsBlockNaming }
 								onClick={ () => {
 									toggleLabelEditingMode( true );
 								} }
