@@ -11,12 +11,14 @@ import {
 	__experimentalHStack as HStack,
 	__experimentalTruncate as Truncate,
 	__experimentalInputControl as InputControl,
+	MenuItem,
 } from '@wordpress/components';
 import { forwardRef, useRef, useState, useEffect } from '@wordpress/element';
 import { Icon, lock } from '@wordpress/icons';
 import { SPACE, ENTER, ESCAPE } from '@wordpress/keycodes';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { hasBlockMetadataSupport } from '@wordpress/blocks';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -27,6 +29,7 @@ import useBlockDisplayTitle from '../block-title/use-block-display-title';
 import ListViewExpander from './expander';
 import { useBlockLock } from '../block-lock';
 import { store as blockEditorStore } from '../../store';
+import BlockSettingsMenuControls from '../block-settings-menu-controls';
 
 const SINGLE_CLICK = 1;
 const DOUBLE_CLICK = 2;
@@ -42,6 +45,7 @@ function ListViewBlockSelectButton(
 		onDragStart,
 		onDragEnd,
 		draggable,
+		isSelected,
 	},
 	ref
 ) {
@@ -138,6 +142,10 @@ function ListViewBlockSelectButton(
 		}
 	}, [ labelEditingMode ] );
 
+	// The `isSelected` check ensures the `BlockSettingsMenuControls` fill
+	// doesn't render multiple times. The block controls has similar internal check.
+	const shouldRenderEditLabelMenuControl = isSelected && supportsBlockNaming;
+
 	return (
 		<>
 			<Button
@@ -218,6 +226,20 @@ function ListViewBlockSelectButton(
 						</span>
 					) }
 				</HStack>
+
+				{ shouldRenderEditLabelMenuControl && (
+					<BlockSettingsMenuControls>
+						{ () => (
+							<MenuItem
+								onClick={ () => {
+									toggleLabelEditingMode( true );
+								} }
+							>
+								{ __( 'Edit label' ) }
+							</MenuItem>
+						) }
+					</BlockSettingsMenuControls>
+				) }
 			</Button>
 		</>
 	);
