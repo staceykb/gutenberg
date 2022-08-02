@@ -208,6 +208,8 @@ function ListViewBlockSelectButton(
 								onBlur={ () => {
 									toggleLabelEditingMode( false );
 								} }
+								label={ __( 'Block name' ) }
+								hideLabelFromVision
 							/>
 						) : (
 							<Truncate ellipsizeMode="auto">
