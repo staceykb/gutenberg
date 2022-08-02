@@ -28,7 +28,7 @@ import {
 } from '@wordpress/block-editor';
 import { EntityProvider } from '@wordpress/core-data';
 
-import { useDispatch, useRegistry } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import {
 	PanelBody,
 	ToggleControl,
@@ -40,6 +40,7 @@ import {
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import { speak } from '@wordpress/a11y';
+import { createBlock } from '@wordpress/blocks';
 
 /**
  * Internal dependencies
@@ -99,7 +100,6 @@ function Navigation( {
 
 	const ref = attributes.ref;
 
-	const registry = useRegistry();
 	const setRef = ( postId ) => {
 		setAttributes( { ref: postId } );
 	};
@@ -219,12 +219,18 @@ function Navigation( {
 			hasUncontrolledInnerBlocks ||
 			isCreatingNavigationMenu ||
 			ref ||
-			! navigationMenus?.length ||
-			navigationMenus?.length > 1
+			! navigationMenus?.length
 		) {
 			return;
 		}
 
+		navigationMenus.sort( ( menuA, menuB ) => {
+			const menuADate = new Date( menuA.date );
+			const menuBDate = new Date( menuB.date );
+			return menuADate.getTime() < menuBDate.getTime();
+		} );
+
+		__unstableMarkNextChangeAsNotPersistent();
 		setRef( navigationMenus[ 0 ].id );
 	}, [ navigationMenus ] );
 
@@ -256,6 +262,11 @@ function Navigation( {
 		! isConvertingClassicMenu &&
 		hasResolvedNavigationMenus &&
 		! hasUncontrolledInnerBlocks;
+
+	if ( isPlaceholder && ! ref ) {
+		__unstableMarkNextChangeAsNotPersistent();
+		replaceInnerBlocks( clientId, [ createBlock( 'core/page-list' ) ] );
+	}
 
 	const isEntityAvailable =
 		! isNavigationMenuMissing && isNavigationMenuResolved;
@@ -462,17 +473,6 @@ function Navigation( {
 		shouldFocusNavigationSelector,
 	] );
 
-	const resetToEmptyBlock = useCallback( () => {
-		registry.batch( () => {
-			setAttributes( {
-				ref: undefined,
-			} );
-			if ( ! ref ) {
-				replaceInnerBlocks( clientId, [] );
-			}
-		} );
-	}, [ clientId, ref ] );
-
 	const isResponsive = 'never' !== overlayMenu;
 
 	const overlayMenuPreviewClasses = classnames(
@@ -621,6 +621,20 @@ function Navigation( {
 	if ( hasUnsavedBlocks ) {
 		return (
 			<TagName { ...blockProps }>
+				<BlockControls>
+					<ToolbarGroup className="wp-block-navigation__toolbar-menu-selector">
+						<NavigationMenuSelector
+							ref={ null }
+							currentMenuId={ null }
+							clientId={ clientId }
+							onSelect={ handleSelectNavigation }
+							onCreateNew={ () => createNavigationMenu( '', [] ) }
+							/* translators: %s: The name of a menu. */
+							actionLabel={ __( "Switch to '%s'" ) }
+							showManageActions
+						/>
+					</ToolbarGroup>
+				</BlockControls>
 				{ stylingInspectorControls }
 				<ResponsiveWrapper
 					id={ clientId }
@@ -665,7 +679,10 @@ function Navigation( {
 					{ __(
 						'Navigation menu has been deleted or is unavailable. '
 					) }
-					<Button onClick={ resetToEmptyBlock } variant="link">
+					<Button
+						onClick={ () => createNavigationMenu( '', [] ) }
+						variant="link"
+					>
 						{ __( 'Create a new menu?' ) }
 					</Button>
 				</Warning>
@@ -687,7 +704,7 @@ function Navigation( {
 		? CustomPlaceholder
 		: Placeholder;
 
-	if ( isPlaceholder ) {
+	if ( isPlaceholder && CustomPlaceholder ) {
 		return (
 			<TagName { ...blockProps }>
 				<PlaceholderComponent
@@ -716,7 +733,9 @@ function Navigation( {
 								currentMenuId={ ref }
 								clientId={ clientId }
 								onSelect={ handleSelectNavigation }
-								onCreateNew={ resetToEmptyBlock }
+								onCreateNew={ () =>
+									createNavigationMenu( '', [] )
+								}
 								/* translators: %s: The name of a menu. */
 								actionLabel={ __( "Switch to '%s'" ) }
 								showManageActions
@@ -735,8 +754,8 @@ function Navigation( {
 							canUserDeleteNavigationMenu && (
 								<NavigationMenuDeleteControl
 									onDelete={ ( deletedMenuTitle = '' ) => {
-										resetToEmptyBlock();
-										showNavigationMenuStatusNotice(
+										createNavigationMenu( '', [] );
+										showNavigationMenuDeleteNotice(
 											sprintf(
 												// translators: %s: the name of a menu (e.g. Header navigation).
 												__(
