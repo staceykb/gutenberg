@@ -236,7 +236,7 @@ function ListViewBlockSelectButton(
 									toggleLabelEditingMode( true );
 								} }
 							>
-								{ __( 'Edit label' ) }
+								{ __( 'Rename' ) }
 							</MenuItem>
 						) }
 					</BlockSettingsMenuControls>
