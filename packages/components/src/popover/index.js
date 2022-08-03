@@ -133,7 +133,7 @@ const Popover = (
 		isAlternate,
 		position,
 		placement: placementProp = 'bottom-start',
-		offset,
+		offset: offsetProp,
 		focusOnMount = 'firstElement',
 		anchorRef,
 		anchorRect,
@@ -204,10 +204,10 @@ const Popover = (
 	}, [ ownerDocument ] );
 
 	const middleware = [
-		frameOffset || offset
+		frameOffset || offsetProp
 			? offsetMiddleware( ( { placement: currentPlacement } ) => {
 					if ( ! frameOffset ) {
-						return offset;
+						return offsetProp;
 					}
 
 					// The main axis should represent the gap between the
@@ -225,7 +225,7 @@ const Popover = (
 					)
 						? -1
 						: 1;
-					const normalizedOffset = offset ? offset : 0;
+					const normalizedOffset = offsetProp ? offsetProp : 0;
 
 					return {
 						mainAxis:
