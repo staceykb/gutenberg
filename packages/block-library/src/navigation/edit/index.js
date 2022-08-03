@@ -28,7 +28,7 @@ import {
 } from '@wordpress/block-editor';
 import { EntityProvider } from '@wordpress/core-data';
 
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useDispatch } from '@wordpress/data';
 import {
 	PanelBody,
 	ToggleControl,
@@ -775,7 +775,7 @@ function Navigation( {
 								<NavigationMenuDeleteControl
 									onDelete={ ( deletedMenuTitle = '' ) => {
 										createNavigationMenu( '', [] );
-										showNavigationMenuDeleteNotice(
+										showNavigationMenuStatusNotice(
 											sprintf(
 												// translators: %s: the name of a menu (e.g. Header navigation).
 												__(
