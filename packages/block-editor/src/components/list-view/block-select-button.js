@@ -45,7 +45,6 @@ function ListViewBlockSelectButton(
 		onDragStart,
 		onDragEnd,
 		draggable,
-		isSelected,
 	},
 	ref
 ) {
@@ -142,10 +141,6 @@ function ListViewBlockSelectButton(
 		}
 	}, [ labelEditingMode ] );
 
-	// The `isSelected` check ensures the `BlockSettingsMenuControls` fill
-	// doesn't render multiple times. The block controls has similar internal check.
-	const shouldRenderEditLabelMenuControl = isSelected;
-
 	return (
 		<>
 			<Button
@@ -229,9 +224,19 @@ function ListViewBlockSelectButton(
 					) }
 				</HStack>
 
-				{ shouldRenderEditLabelMenuControl && (
-					<BlockSettingsMenuControls>
-						{ () => (
+				<BlockSettingsMenuControls>
+					{ ( selectedBlocks ) => {
+						// This check ensures the `BlockSettingsMenuControls` fill
+						// doesn't render multiple times and also that it renders for
+						// the block from which the menu was triggered.
+						if (
+							! selectedBlocks?.selectedClientIds?.includes(
+								clientId
+							)
+						) {
+							return null;
+						}
+						return (
 							<MenuItem
 								disabled={ ! supportsBlockNaming }
 								onClick={ () => {
@@ -240,9 +245,9 @@ function ListViewBlockSelectButton(
 							>
 								{ __( 'Rename' ) }
 							</MenuItem>
-						) }
-					</BlockSettingsMenuControls>
-				) }
+						);
+					} }
+				</BlockSettingsMenuControls>
 			</Button>
 		</>
 	);
