@@ -22,7 +22,7 @@ import {
 	getBlockTypes,
 } from '@wordpress/blocks';
 import { useSelect } from '@wordpress/data';
-import { useEffect, useState, useContext } from '@wordpress/element';
+import { useContext, useMemo } from '@wordpress/element';
 import { getCSSRules } from '@wordpress/style-engine';
 import {
 	__unstablePresetDuotoneFilter as PresetDuotoneFilter,
@@ -782,9 +782,6 @@ export const getBlockSelectors = ( blockTypes ) => {
 };
 
 export function useGlobalStylesOutput() {
-	const [ stylesheets, setStylesheets ] = useState( [] );
-	const [ settings, setSettings ] = useState( {} );
-	const [ svgFilters, setSvgFilters ] = useState( {} );
 	const { merged: mergedConfig } = useContext( GlobalStylesContext );
 	const [ blockGap ] = useSetting( 'spacing.blockGap' );
 	const hasBlockGapSupport = blockGap !== null;
@@ -794,9 +791,9 @@ export function useGlobalStylesOutput() {
 		return !! getSettings().disableLayoutStyles;
 	} );
 
-	useEffect( () => {
+	return useMemo( () => {
 		if ( ! mergedConfig?.styles || ! mergedConfig?.settings ) {
-			return;
+			return [];
 		}
 
 		const blockSelectors = getBlockSelectors( getBlockTypes() );
@@ -812,7 +809,7 @@ export function useGlobalStylesOutput() {
 			disableLayoutStyles
 		);
 		const filters = toSvgFilters( mergedConfig, blockSelectors );
-		setStylesheets( [
+		const stylesheets = [
 			{
 				css: customProperties,
 				isGlobalStyles: true,
@@ -821,15 +818,18 @@ export function useGlobalStylesOutput() {
 				css: globalStyles,
 				isGlobalStyles: true,
 			},
-		] );
-		setSettings( mergedConfig.settings );
-		setSvgFilters( filters );
+		];
+
+		return [
+			stylesheets,
+			mergedConfig.settings,
+			filters,
+			hasBlockGapSupport,
+		];
 	}, [
 		hasBlockGapSupport,
 		hasFallbackGapSupport,
 		mergedConfig,
 		disableLayoutStyles,
 	] );
-
-	return [ stylesheets, settings, svgFilters, hasBlockGapSupport ];
 }
