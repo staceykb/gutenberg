@@ -704,6 +704,14 @@ function Navigation( {
 		? CustomPlaceholder
 		: Placeholder;
 
+	/**
+	 * The navigation block supported Cusrtom Placeholders.
+	 * Even though the current UX tries as hard as possible to not
+	 * end up in a placeholder state, the block continues to support
+	 * this extensibility point, via a CustomPlaceholder.
+	 * WHen CustomPlaceholder is present it becomes the default fallback
+	 * for an empty navigation block, instead of the default fallbacks.
+	 */
 	if ( isPlaceholder && CustomPlaceholder ) {
 		return (
 			<TagName { ...blockProps }>
