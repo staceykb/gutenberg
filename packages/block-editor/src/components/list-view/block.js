@@ -287,6 +287,7 @@ function ListViewBlock( {
 				>
 					{ ( { ref, tabIndex, onFocus } ) => (
 						<BlockSettingsDropdown
+							clientId={ clientId }
 							clientIds={ dropdownClientIds }
 							icon={ moreVertical }
 							label={ settingsAriaLabel }

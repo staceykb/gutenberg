@@ -48,6 +48,7 @@ function CopyMenuItem( { blocks, onCopy } ) {
 }
 
 export function BlockSettingsDropdown( {
+	clientId,
 	clientIds,
 	__experimentalSelectBlock,
 	children,
@@ -288,6 +289,7 @@ export function BlockSettingsDropdown( {
 							</MenuGroup>
 							<BlockSettingsMenuControls.Slot
 								fillProps={ { onClose } }
+								selectedClientId={ clientId }
 								clientIds={ clientIds }
 							/>
 							{ typeof children === 'function'

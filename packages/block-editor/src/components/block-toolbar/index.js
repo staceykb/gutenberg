@@ -159,7 +159,10 @@ const BlockToolbar = ( { hideDragHandle } ) => {
 					</__unstableBlockNameContext.Provider>
 				</>
 			) }
-			<BlockSettingsMenu clientIds={ blockClientIds } />
+			<BlockSettingsMenu
+				clientIds={ blockClientIds }
+				clientId={ blockClientId }
+			/>
 		</div>
 	);
 };
