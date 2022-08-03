@@ -118,6 +118,9 @@ const placementToAnimationOrigin = ( placement ) => {
 	return x + ' ' + y;
 };
 
+const isTopBottomPlacement = ( placement ) => /top|bottom/i.test( placement );
+const hasBeforePlacement = ( placement ) => /top|left/i.test( placement );
+
 const Popover = (
 	{
 		range,
@@ -207,22 +210,21 @@ const Popover = (
 						return offset;
 					}
 
-					const isTopBottomPlacement =
-						currentPlacement.includes( 'top' ) ||
-						currentPlacement.includes( 'bottom' );
-
 					// The main axis should represent the gap between the
 					// floating element and the reference element. The cross
 					// axis is always perpendicular to the main axis.
-					const mainAxis = isTopBottomPlacement ? 'y' : 'x';
+					const mainAxis = isTopBottomPlacement( currentPlacement )
+						? 'y'
+						: 'x';
 					const crossAxis = mainAxis === 'x' ? 'y' : 'x';
 
 					// When the popover is before the reference, subtract the offset,
 					// of the main axis else add it.
-					const hasBeforePlacement =
-						currentPlacement.includes( 'top' ) ||
-						currentPlacement.includes( 'left' );
-					const mainAxisModifier = hasBeforePlacement ? -1 : 1;
+					const mainAxisModifier = hasBeforePlacement(
+						currentPlacement
+					)
+						? -1
+						: 1;
 					const normalizedOffset = offset ? offset : 0;
 
 					return {
