@@ -54,7 +54,8 @@
 		}
 
 		// Provide exceptions for placeholders.
-		.components-placeholder {
+		.components-placeholder,
+		.block-editor-block-list__block.is-multi-selected:not(.is-partially-selected) {
 			::selection {
 				background: transparent;
 			}
