@@ -230,6 +230,12 @@ function Navigation( {
 			return menuADate.getTime() < menuBDate.getTime();
 		} );
 
+		/**
+		 *  this fallback only displays (both in editor and on front)
+		 *  the best guess from existing navigation menus
+		 *  we don't want the fallback to request a save
+		 *  nor to be undoable, hence we mark it non persistent
+		 */
 		__unstableMarkNextChangeAsNotPersistent();
 		setRef( navigationMenus[ 0 ].id );
 	}, [ navigationMenus ] );
@@ -264,6 +270,12 @@ function Navigation( {
 		! hasUncontrolledInnerBlocks;
 
 	if ( isPlaceholder && ! ref ) {
+		/**
+		 *  this fallback only displays (both in editor and on front)
+		 *  the list of pages block if not menu is available
+		 *  we don't want the fallback to request a save
+		 *  nor to be undoable, hence we mark it non persistent
+		 */
 		__unstableMarkNextChangeAsNotPersistent();
 		replaceInnerBlocks( clientId, [ createBlock( 'core/page-list' ) ] );
 	}
