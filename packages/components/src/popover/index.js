@@ -252,7 +252,39 @@ const Popover = (
 		__unstableShift
 			? shift( {
 					crossAxis: true,
-					limiter: limitShift(),
+					limiter: limitShift( {
+						offset: ( { placement: currentPlacement } ) => {
+							// The following calculations are aimed at allowing the floating
+							// element to shift fully below the reference element, when the
+							// reference element is in a different document (i.e. an iFrame).
+							if ( ownerDocument === document ) {
+								return 0;
+							}
+
+							// The main axis (according to floating UI's docs) is the "x" axis
+							// for 'top' and 'bottom' placements, and the "y" axis for 'left'
+							// and 'right' placements.
+							const mainAxis = isTopBottomPlacement(
+								currentPlacement
+							)
+								? 'x'
+								: 'y';
+							const crossAxis = mainAxis === 'x' ? 'y' : 'x';
+
+							const crossAxisModifier = hasBeforePlacement(
+								currentPlacement
+							)
+								? -1
+								: 1;
+
+							return {
+								mainAxis: -frameOffset[ mainAxis ],
+								crossAxis:
+									crossAxisModifier *
+									frameOffset[ crossAxis ],
+							};
+						},
+					} ),
 					padding: 1, // Necessary to avoid flickering at the edge of the viewport.
 			  } )
 			: undefined,
