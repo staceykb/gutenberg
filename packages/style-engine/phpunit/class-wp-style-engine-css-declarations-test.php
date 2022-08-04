@@ -120,7 +120,8 @@ class WP_Style_Engine_CSS_Declarations_Test extends WP_UnitTestCase {
 		$this->assertSame(
 			'	color: red;
 	border-top-left-radius: 99px;
-	text-decoration: underline;',
+	text-decoration: underline;
+',
 			$css_declarations->get_declarations_string( true, 1 )
 		);
 	}
@@ -139,7 +140,8 @@ class WP_Style_Engine_CSS_Declarations_Test extends WP_UnitTestCase {
 		$this->assertSame(
 			'		color: red;
 		border-top-left-radius: 99px;
-		text-decoration: underline;',
+		text-decoration: underline;
+',
 			$css_declarations->get_declarations_string( true, 2 )
 		);
 	}
@@ -156,7 +158,7 @@ class WP_Style_Engine_CSS_Declarations_Test extends WP_UnitTestCase {
 		$css_declarations   = new WP_Style_Engine_CSS_Declarations( $input_declarations );
 
 		$this->assertSame(
-			'color:&lt;red/&gt;;margin-right:10em;',
+			'margin-right:10em;',
 			$css_declarations->get_declarations_string()
 		);
 	}
