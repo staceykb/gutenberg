@@ -26,6 +26,7 @@ import {
 	getColorClassName,
 	Warning,
 	__experimentalUseBlockOverlayActive as useBlockOverlayActive,
+	__experimentalListView as ListView,
 } from '@wordpress/block-editor';
 import { EntityProvider } from '@wordpress/core-data';
 
@@ -35,6 +36,7 @@ import {
 	ToggleControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	__experimentalToolsPanel as ToolsPanel,
 	ToolbarGroup,
 	Button,
 	Spinner,
@@ -719,6 +721,11 @@ function Navigation( {
 						</ToolbarGroup>
 					) }
 				</BlockControls>
+				<InspectorControls>
+					<ToolsPanel label={ __( 'Menu details' ) }>
+						<ListView blocks={ innerBlocks } />
+					</ToolsPanel>
+				</InspectorControls>
 				{ stylingInspectorControls }
 				{ isEntityAvailable && (
 					<InspectorControls __experimentalGroup="advanced">
