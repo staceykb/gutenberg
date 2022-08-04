@@ -4,7 +4,7 @@
 import { serialize } from '@wordpress/blocks';
 import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch } from '@wordpress/data';
-import { useState, useCallback } from '@wordpress/element';
+import { useState, useMemo } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -26,58 +26,59 @@ export default function useCreateNavigationMenu( clientId ) {
 
 	// This callback uses data from the two placeholder steps and only creates
 	// a new navigation menu when the user completes the final step.
-	const create = useCallback(
-		async ( title = null, blocks = [] ) => {
-			// Guard against creating Navigations without a title.
-			// Note you can pass no title, but if one is passed it must be
-			// a string otherwise the title may end up being empty.
-			if ( title && typeof title !== 'string' ) {
-				setError(
-					'Invalid title supplied when creating Navigation Menu.'
-				);
-				setStatus( CREATE_NAVIGATION_MENU_ERROR );
-				throw new Error(
-					`Value of supplied title argument was not a string.`
-				);
-			}
-
-			setStatus( CREATE_NAVIGATION_MENU_PENDING );
-			setValue( null );
-			setError( null );
-
-			if ( ! title ) {
-				title = await generateDefaultTitle().catch( ( err ) => {
-					setError( err?.message );
+	const create = useMemo(
+		() =>
+			async ( title = null, blocks = [] ) => {
+				// Guard against creating Navigations without a title.
+				// Note you can pass no title, but if one is passed it must be
+				// a string otherwise the title may end up being empty.
+				if ( title && typeof title !== 'string' ) {
+					setError(
+						'Invalid title supplied when creating Navigation Menu.'
+					);
 					setStatus( CREATE_NAVIGATION_MENU_ERROR );
 					throw new Error(
-						'Failed to create title when saving new Navigation Menu.',
-						{
-							cause: err,
-						}
+						`Value of supplied title argument was not a string.`
 					);
-				} );
-			}
-			const record = {
-				title,
-				content: serialize( blocks ),
-				status: 'publish',
-			};
+				}
 
-			// Return affords ability to await on this function directly
-			return saveEntityRecord( 'postType', 'wp_navigation', record )
-				.then( ( response ) => {
-					setValue( response );
-					setStatus( CREATE_NAVIGATION_MENU_SUCCESS );
-					return response;
-				} )
-				.catch( ( err ) => {
-					setError( err?.message );
-					setStatus( CREATE_NAVIGATION_MENU_ERROR );
-					throw new Error( 'Unable to save new Navigation Menu', {
-						cause: err,
+				setStatus( CREATE_NAVIGATION_MENU_PENDING );
+				setValue( null );
+				setError( null );
+
+				if ( ! title ) {
+					title = await generateDefaultTitle().catch( ( err ) => {
+						setError( err?.message );
+						setStatus( CREATE_NAVIGATION_MENU_ERROR );
+						throw new Error(
+							'Failed to create title when saving new Navigation Menu.',
+							{
+								cause: err,
+							}
+						);
 					} );
-				} );
-		},
+				}
+				const record = {
+					title,
+					content: serialize( blocks ),
+					status: 'publish',
+				};
+
+				// Return affords ability to await on this function directly
+				return saveEntityRecord( 'postType', 'wp_navigation', record )
+					.then( ( response ) => {
+						setValue( response );
+						setStatus( CREATE_NAVIGATION_MENU_SUCCESS );
+						return response;
+					} )
+					.catch( ( err ) => {
+						setError( err?.message );
+						setStatus( CREATE_NAVIGATION_MENU_ERROR );
+						throw new Error( 'Unable to save new Navigation Menu', {
+							cause: err,
+						} );
+					} );
+			},
 		[ serialize, saveEntityRecord ]
 	);
 

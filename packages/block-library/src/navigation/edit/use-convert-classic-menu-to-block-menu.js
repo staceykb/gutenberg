@@ -3,7 +3,7 @@
  */
 import { useRegistry } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
-import { useState, useCallback } from '@wordpress/element';
+import { useState, useMemo } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
@@ -23,7 +23,6 @@ function useConvertClassicToBlockMenu( clientId ) {
 	const registry = useRegistry();
 
 	const [ status, setStatus ] = useState( CLASSIC_MENU_CONVERSION_IDLE );
-	const [ value, setValue ] = useState( null );
 	const [ error, setError ] = useState( null );
 
 	async function convertClassicMenuToBlockMenu( menuId, menuName ) {
@@ -88,8 +87,9 @@ function useConvertClassicToBlockMenu( clientId ) {
 		return navigationMenu;
 	}
 
-	const convert = useCallback(
-		( menuId, menuName ) => {
+	// `useMemo` since `useCallback` can't be used for async functions.
+	const convert = useMemo(
+		() => async ( menuId, menuName ) => {
 			if ( ! menuId || ! menuName ) {
 				setError( 'Unable to convert menu. Missing menu details.' );
 				setStatus( CLASSIC_MENU_CONVERSION_ERROR );
@@ -97,13 +97,12 @@ function useConvertClassicToBlockMenu( clientId ) {
 			}
 
 			setStatus( CLASSIC_MENU_CONVERSION_PENDING );
-			setValue( null );
 			setError( null );
 
-			convertClassicMenuToBlockMenu( menuId, menuName )
-				.then( ( navMenu ) => {
-					setValue( navMenu );
+			return await convertClassicMenuToBlockMenu( menuId, menuName )
+				.then( ( navigationMenu ) => {
 					setStatus( CLASSIC_MENU_CONVERSION_SUCCESS );
+					return navigationMenu;
 				} )
 				.catch( ( err ) => {
 					setError( err?.message );
@@ -122,13 +121,12 @@ function useConvertClassicToBlockMenu( clientId ) {
 					);
 				} );
 		},
-		[ clientId ]
+		[]
 	);
 
 	return {
 		convert,
 		status,
-		value,
 		error,
 	};
 }

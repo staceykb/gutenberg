@@ -197,7 +197,6 @@ function Navigation( {
 		isNavigationMenuResolved,
 		isNavigationMenuMissing,
 		navigationMenus,
-		navigationMenu,
 		canUserUpdateNavigationMenu,
 		hasResolvedCanUserUpdateNavigationMenu,
 		canUserDeleteNavigationMenu,
@@ -225,13 +224,10 @@ function Navigation( {
 
 	const navRef = useRef();
 
-	const isDraftNavigationMenu = navigationMenu?.status === 'draft';
-
 	const {
-		convert,
+		convert: convertClassicMenu,
 		status: classicMenuConversionStatus,
 		error: classicMenuConversionError,
-		value: classicMenuConversionResult,
 	} = useConvertClassicToBlockMenu( clientId );
 
 	const isConvertingClassicMenu =
@@ -314,22 +310,13 @@ function Navigation( {
 	] = useState();
 	const [ detectedOverlayColor, setDetectedOverlayColor ] = useState();
 
-	const handleUpdateMenu = ( menuId ) => {
-		setRef( menuId );
-		selectBlock( clientId );
-	};
-
 	useEffect( () => {
 		hideClassicMenuConversionNotice();
 		if ( classicMenuConversionStatus === CLASSIC_MENU_CONVERSION_PENDING ) {
 			speak( __( 'Classic menu importing.' ) );
 		}
 
-		if (
-			classicMenuConversionStatus === CLASSIC_MENU_CONVERSION_SUCCESS &&
-			classicMenuConversionResult
-		) {
-			handleUpdateMenu( classicMenuConversionResult?.id );
+		if ( classicMenuConversionStatus === CLASSIC_MENU_CONVERSION_SUCCESS ) {
 			showClassicMenuConversionNotice(
 				__( 'Classic menu imported successfully.' )
 			);
@@ -342,11 +329,7 @@ function Navigation( {
 			);
 			speak( __( 'Classic menu import failed.' ) );
 		}
-	}, [
-		classicMenuConversionStatus,
-		classicMenuConversionResult,
-		classicMenuConversionError,
-	] );
+	}, [ classicMenuConversionStatus, classicMenuConversionError ] );
 
 	// Spacer block needs orientation from context. This is a patch until
 	// https://github.com/WordPress/gutenberg/issues/36197 is addressed.
@@ -419,43 +402,6 @@ function Navigation( {
 	] );
 
 	const navigationSelectorRef = useRef();
-	const [ shouldFocusNavigationSelector, setShouldFocusNavigationSelector ] =
-		useState( false );
-	const handleSelectNavigation = useCallback(
-		( navPostOrClassicMenu ) => {
-			if ( ! navPostOrClassicMenu ) {
-				return;
-			}
-
-			const isClassicMenu =
-				navPostOrClassicMenu.hasOwnProperty( 'auto_add' );
-
-			if ( isClassicMenu ) {
-				convert( navPostOrClassicMenu.id, navPostOrClassicMenu.name );
-			} else {
-				handleUpdateMenu( navPostOrClassicMenu.id );
-			}
-			setShouldFocusNavigationSelector( true );
-		},
-		[ convert, handleUpdateMenu ]
-	);
-
-	// Focus support after menu selection.
-	useEffect( () => {
-		if (
-			isDraftNavigationMenu ||
-			! isEntityAvailable ||
-			! shouldFocusNavigationSelector
-		) {
-			return;
-		}
-		navigationSelectorRef?.current?.focus();
-		setShouldFocusNavigationSelector( false );
-	}, [
-		isDraftNavigationMenu,
-		isEntityAvailable,
-		shouldFocusNavigationSelector,
-	] );
 
 	const resetToEmptyBlock = useCallback( () => {
 		registry.batch( () => {
@@ -693,7 +639,18 @@ function Navigation( {
 					isResolvingCanUserCreateNavigationMenu={
 						isResolvingCanUserCreateNavigationMenu
 					}
-					onFinish={ handleSelectNavigation }
+					onSelectNavigationMenu={ ( menuId ) => {
+						setRef( menuId );
+						selectBlock( clientId );
+					} }
+					onSelectClassicMenu={ async ( classicMenu ) => {
+						const navigationMenu = await convertClassicMenu(
+							classicMenu.id,
+							classicMenu.name
+						);
+						setRef( navigationMenu.id );
+						selectBlock( clientId );
+					} }
 					onCreateEmpty={ () => createNavigationMenu( '', [] ) }
 				/>
 			</TagName>
@@ -704,20 +661,25 @@ function Navigation( {
 		<EntityProvider kind="postType" type="wp_navigation" id={ ref }>
 			<RecursionProvider uniqueId={ recursionId }>
 				<BlockControls>
-					{ ! isDraftNavigationMenu && isEntityAvailable && (
-						<ToolbarGroup className="wp-block-navigation__toolbar-menu-selector">
-							<NavigationMenuSelector
-								ref={ navigationSelectorRef }
-								currentMenuId={ ref }
-								clientId={ clientId }
-								onSelect={ handleSelectNavigation }
-								onCreateNew={ resetToEmptyBlock }
-								/* translators: %s: The name of a menu. */
-								actionLabel={ __( "Switch to '%s'" ) }
-								showManageActions
-							/>
-						</ToolbarGroup>
-					) }
+					<ToolbarGroup className="wp-block-navigation__toolbar-menu-selector">
+						<NavigationMenuSelector
+							ref={ navigationSelectorRef }
+							currentMenuId={ ref }
+							clientId={ clientId }
+							onSelectNavigationMenu={ setRef }
+							onSelectClassicMenu={ async ( classicMenu ) => {
+								const navigationMenu = await convertClassicMenu(
+									classicMenu.id,
+									classicMenu.name
+								);
+								setRef( navigationMenu.id );
+							} }
+							onCreateNew={ resetToEmptyBlock }
+							/* translators: %s: The name of a menu. */
+							actionLabel={ __( "Switch to '%s'" ) }
+							showManageActions
+						/>
+					</ToolbarGroup>
 				</BlockControls>
 				{ stylingInspectorControls }
 				{ isEntityAvailable && (
