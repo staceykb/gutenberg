@@ -7,7 +7,7 @@ import { has } from 'lodash';
  * WordPress dependencies
  */
 import { addFilter } from '@wordpress/hooks';
-import { hasBlockMetadataSupport } from '@wordpress/blocks';
+import { __experimentalHasBlockMetadataSupport as hasBlockMetadataSupport } from '@wordpress/blocks';
 
 const META_ATTRIBUTE_NAME = 'metadata';
 

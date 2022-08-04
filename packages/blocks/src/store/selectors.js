@@ -643,7 +643,7 @@ export function hasBlockSupport( state, nameOrType, feature, defaultSupports ) {
 	return !! getBlockSupport( state, nameOrType, feature, defaultSupports );
 }
 
-export function hasBlockMetadataSupport(
+export function __experimentalHasBlockMetadataSupport(
 	state,
 	nameOrType,
 	feature,

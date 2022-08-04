@@ -17,7 +17,7 @@ import { forwardRef, useRef, useState, useEffect } from '@wordpress/element';
 import { Icon, lock } from '@wordpress/icons';
 import { SPACE, ENTER, ESCAPE } from '@wordpress/keycodes';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { hasBlockMetadataSupport } from '@wordpress/blocks';
+import { __experimentalHasBlockMetadataSupport as hasBlockMetadataSupport } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
 
 /**

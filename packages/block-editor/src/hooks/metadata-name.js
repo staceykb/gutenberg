@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { addFilter } from '@wordpress/hooks';
-import { hasBlockMetadataSupport } from '@wordpress/blocks';
+import { __experimentalHasBlockMetadataSupport as hasBlockMetadataSupport } from '@wordpress/blocks';
 
 /**
  * Filters registered block settings, adding an `__experimentalLabel` callback if one does not already exist.

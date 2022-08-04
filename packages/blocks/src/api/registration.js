@@ -488,12 +488,12 @@ export function getBlockSupport( nameOrType, feature, defaultSupports ) {
 	);
 }
 
-export function hasBlockMetadataSupport(
+export function __experimentalHasBlockMetadataSupport(
 	nameOrType,
 	feature,
 	defaultSupports
 ) {
-	return select( blocksStore ).hasBlockMetadataSupport(
+	return select( blocksStore ).__experimentalHasBlockMetadataSupport(
 		nameOrType,
 		feature,
 		defaultSupports

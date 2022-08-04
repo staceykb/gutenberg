@@ -484,10 +484,6 @@ _Returns_
 
 -   `?string`: Block name.
 
-### hasBlockMetadataSupport
-
-Undocumented declaration.
-
 ### hasBlockSupport
 
 Returns true if the block defines support for a feature, or false otherwise.

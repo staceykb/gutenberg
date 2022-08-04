@@ -550,10 +550,6 @@ _Returns_
 
 -   `string?`: Name of the block for handling unregistered blocks.
 
-### hasBlockMetadataSupport
-
-Undocumented declaration.
-
 ### hasBlockSupport
 
 Returns true if the block defines support for a feature, or false otherwise.
