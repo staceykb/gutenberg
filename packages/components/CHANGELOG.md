@@ -12,6 +12,7 @@
 -   `TextControl`, `TextareaControl`, `ToggleGroupControl`: Add `box-sizing` reset style ([#42889](https://github.com/WordPress/gutenberg/pull/42889)).
 -   `Popover`: fix arrow placement and design ([#42874](https://github.com/WordPress/gutenberg/pull/42874/)).
 -   `Popover`: fix minor glitch in arrow [#42903](https://github.com/WordPress/gutenberg/pull/42903)).
+-   `Popover`: fix shift limit when anchor is inside an iframe [#42950](https://github.com/WordPress/gutenberg/pull/42950)).
 
 ### Enhancements
 
