@@ -20,11 +20,11 @@ export function addLabelCallback( settings ) {
 	// Check whether block metadata is supported before using it.
 	if ( hasBlockMetadataSupport( settings, 'name' ) ) {
 		settings.__experimentalLabel = ( attributes, { context } ) => {
-			const { __experimentalMetadata: meta } = attributes;
+			const { metadata } = attributes;
 
 			// In the list view, use the block's name sattribute as the label.
-			if ( context === 'list-view' && meta?.name ) {
-				return meta.name;
+			if ( context === 'list-view' && metadata?.name ) {
+				return metadata.name;
 			}
 		};
 	}

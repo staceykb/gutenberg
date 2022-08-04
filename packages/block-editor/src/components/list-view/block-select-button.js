@@ -121,9 +121,9 @@ function ListViewBlockSelectButton(
 					// Submit changes only for ENTER.
 					updateBlockAttributes( clientId, {
 						// Include existing metadata (if present) to avoid overwriting existing.
-						__experimentalMetadata: {
-							...( blockAttributes?.__experimentalMetadata &&
-								blockAttributes?.__experimentalMetadata ),
+						metadata: {
+							...( blockAttributes?.metadata &&
+								blockAttributes?.metadata ),
 							name: inputValue,
 						},
 					} );
