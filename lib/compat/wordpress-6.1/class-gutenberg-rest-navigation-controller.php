@@ -11,7 +11,6 @@
  */
 class Gutenberg_REST_Navigation_Controller extends WP_REST_Posts_Controller {
 
-
 	/**
 	 * Registers the controllers routes.
 	 *
@@ -63,6 +62,25 @@ class Gutenberg_REST_Navigation_Controller extends WP_REST_Posts_Controller {
 	}
 
 
+	protected function prepare_item_for_database( $request ) {
+
+		$existing_post = $this->get_post( $request['id'] );
+
+		if ( ! is_wp_error( $existing_post ) ) {
+			// prepare_item_for_database expects a postId as the id field of the request.
+			// it is used for functions such as get_post_type_object.
+			// therefore we retrieve the ID of any existing post and overload the ID
+			// of the request to use the postId. This ensures `update` requests are handled
+			// correctly.
+			$request['id'] = $existing_post->ID;
+		}
+
+		return parent::prepare_item_for_database( $request );
+
+	}
+
+
+
 
 	/**
 	 * Overide WP_REST_Posts_Controller parent function to query for
@@ -78,12 +96,9 @@ class Gutenberg_REST_Navigation_Controller extends WP_REST_Posts_Controller {
 	 */
 	protected function get_post( $id ) {
 
+		// Handle ID based id param.
 		if ( ! is_string( $id ) ) {
-			return new WP_Error(
-				'rest_post_invalid_id',
-				__( 'Invalid navigation ID (slug).' ),
-				array( 'status' => 404 )
-			);
+			return parent::get_post( $id );
 		}
 
 		$args = array(
