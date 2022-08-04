@@ -3,7 +3,7 @@
  */
 import { useRegistry } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
-import { useState, useMemo } from '@wordpress/element';
+import { useState, useCallback } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
@@ -87,42 +87,38 @@ function useConvertClassicToBlockMenu( clientId ) {
 		return navigationMenu;
 	}
 
-	// `useMemo` since `useCallback` can't be used for async functions.
-	const convert = useMemo(
-		() => async ( menuId, menuName ) => {
-			if ( ! menuId || ! menuName ) {
-				setError( 'Unable to convert menu. Missing menu details.' );
+	const convert = useCallback( async ( menuId, menuName ) => {
+		if ( ! menuId || ! menuName ) {
+			setError( 'Unable to convert menu. Missing menu details.' );
+			setStatus( CLASSIC_MENU_CONVERSION_ERROR );
+			return;
+		}
+
+		setStatus( CLASSIC_MENU_CONVERSION_PENDING );
+		setError( null );
+
+		return await convertClassicMenuToBlockMenu( menuId, menuName )
+			.then( ( navigationMenu ) => {
+				setStatus( CLASSIC_MENU_CONVERSION_SUCCESS );
+				return navigationMenu;
+			} )
+			.catch( ( err ) => {
+				setError( err?.message );
 				setStatus( CLASSIC_MENU_CONVERSION_ERROR );
-				return;
-			}
 
-			setStatus( CLASSIC_MENU_CONVERSION_PENDING );
-			setError( null );
-
-			return await convertClassicMenuToBlockMenu( menuId, menuName )
-				.then( ( navigationMenu ) => {
-					setStatus( CLASSIC_MENU_CONVERSION_SUCCESS );
-					return navigationMenu;
-				} )
-				.catch( ( err ) => {
-					setError( err?.message );
-					setStatus( CLASSIC_MENU_CONVERSION_ERROR );
-
-					// Rethrow error for debugging.
-					throw new Error(
-						sprintf(
-							// translators: %s: the name of a menu (e.g. Header navigation).
-							__( `Unable to create Navigation Menu "%s".` ),
-							menuName
-						),
-						{
-							cause: err,
-						}
-					);
-				} );
-		},
-		[]
-	);
+				// Rethrow error for debugging.
+				throw new Error(
+					sprintf(
+						// translators: %s: the name of a menu (e.g. Header navigation).
+						__( `Unable to create Navigation Menu "%s".` ),
+						menuName
+					),
+					{
+						cause: err,
+					}
+				);
+			} );
+	}, [] );
 
 	return {
 		convert,
