@@ -1444,10 +1444,10 @@ Expected mock function not to be called but it was called with: ["POST", "http:/
 			);
 		} );
 
-		it( 'should always focus the menu item after navigation menu selection', async () => {
+		it( 'keeps focus the menu item after navigation menu selection', async () => {
 			// Create some navigation menus to work with.
 			await createNavigationMenu( {
-				title: 'Example Navigation',
+				title: 'First Example Navigation',
 				content:
 					'<!-- wp:navigation-link {"label":"WordPress","type":"custom","url":"http://www.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->',
 			} );
@@ -1465,17 +1465,26 @@ Expected mock function not to be called but it was called with: ["POST", "http:/
 			await waitForBlock( 'Navigation' );
 			await page.waitForXPath( START_EMPTY_XPATH );
 
-			// Change menus via the select menu toolbar button.
+			// First select a menu from the block placeholder
 			const selectMenuDropdown = await page.waitForSelector(
 				'[aria-label="Select Menu"]'
 			);
 			await selectMenuDropdown.click();
-			const exampleNavigationOption = await page.waitForXPath(
-				'//span[contains(text(), "Second Example Navigation")]'
+			const firstNavigationOption = await page.waitForXPath(
+				'//button[.="First Example Navigation"]'
 			);
-			await exampleNavigationOption.click();
+			await firstNavigationOption.click();
 
-			await expect( exampleNavigationOption ).toHaveFocus();
+			// Next switch menu using the toolbar.
+			await clickBlockToolbarButton( 'Select Menu' );
+
+			const secondNavigationOption = await page.waitForXPath(
+				'//button[.="Second Example Navigation"]'
+			);
+			await secondNavigationOption.click();
+
+			// The menu item should still have focus.
+			await expect( secondNavigationOption ).toHaveFocus();
 		} );
 	} );
 } );
