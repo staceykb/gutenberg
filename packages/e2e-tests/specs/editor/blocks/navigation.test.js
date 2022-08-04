@@ -1444,7 +1444,7 @@ Expected mock function not to be called but it was called with: ["POST", "http:/
 			);
 		} );
 
-		it( 'should always focus select menu button after item selection', async () => {
+		it( 'should always focus the menu item after navigation menu selection', async () => {
 			// Create some navigation menus to work with.
 			await createNavigationMenu( {
 				title: 'Example Navigation',
@@ -1475,11 +1475,7 @@ Expected mock function not to be called but it was called with: ["POST", "http:/
 			);
 			await exampleNavigationOption.click();
 
-			// Once the options are closed, does select menu button receive focus?
-			const selectMenuDropdown2 = await page.waitForSelector(
-				'[aria-label="Select Menu"]'
-			);
-			await expect( selectMenuDropdown2 ).toHaveFocus();
+			await expect( exampleNavigationOption ).toHaveFocus();
 		} );
 	} );
 } );
