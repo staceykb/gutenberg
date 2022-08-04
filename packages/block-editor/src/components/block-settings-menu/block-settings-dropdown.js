@@ -52,6 +52,7 @@ export function BlockSettingsDropdown( {
 	clientIds,
 	__experimentalSelectBlock,
 	children,
+	context,
 	...props
 } ) {
 	const blockClientIds = castArray( clientIds );
@@ -291,6 +292,7 @@ export function BlockSettingsDropdown( {
 								fillProps={ { onClose } }
 								selectedClientId={ clientId }
 								clientIds={ clientIds }
+								context={ context }
 							/>
 							{ typeof children === 'function'
 								? children( { onClose } )

@@ -29,6 +29,7 @@ const BlockSettingsMenuControlsSlot = ( {
 	fillProps,
 	clientIds = null,
 	selectedClientId,
+	context,
 } ) => {
 	const { selectedBlocks, selectedClientIds, canRemove } = useSelect(
 		( select ) => {
@@ -68,6 +69,7 @@ const BlockSettingsMenuControlsSlot = ( {
 				selectedBlocks,
 				selectedClientIds,
 				selectedClientId,
+				context,
 			} }
 		>
 			{ ( fills ) => {

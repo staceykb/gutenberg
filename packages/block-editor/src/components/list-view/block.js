@@ -299,6 +299,7 @@ function ListViewBlock( {
 							} }
 							disableOpenOnArrowDown
 							__experimentalSelectBlock={ updateSelection }
+							context={ 'list-view' }
 						/>
 					) }
 				</TreeGridCell>
