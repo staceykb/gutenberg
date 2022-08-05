@@ -52,16 +52,16 @@ describe( 'Group', () => {
 		await transformBlockTo( 'Group' );
 
 		expect( await getEditedPostContent() ).toMatchInlineSnapshot( `
-			"<!-- wp:group -->
-			<div class=\\"wp-block-group\\"><!-- wp:paragraph -->
-			<p>1</p>
-			<!-- /wp:paragraph -->
+		"<!-- wp:group {\\"layout\\":{\\"type\\":\\"column\\"}} -->
+		<div class=\\"wp-block-group\\"><!-- wp:paragraph -->
+		<p>1</p>
+		<!-- /wp:paragraph -->
 
-			<!-- wp:paragraph -->
-			<p>2</p>
-			<!-- /wp:paragraph --></div>
-			<!-- /wp:group -->"
-		` );
+		<!-- wp:paragraph -->
+		<p>2</p>
+		<!-- /wp:paragraph --></div>
+		<!-- /wp:group -->"
+	` );
 
 		await transformBlockTo( 'Unwrap' );
 
