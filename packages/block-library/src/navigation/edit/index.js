@@ -686,7 +686,21 @@ function Navigation( {
 	// TODO - the user should be able to select a new one?
 	if ( ref && isNavigationMenuMissing ) {
 		return (
-			<div { ...blockProps }>
+			<TagName { ...blockProps }>
+				<BlockControls>
+					<ToolbarGroup className="wp-block-navigation__toolbar-menu-selector">
+						<NavigationMenuSelector
+							ref={ navigationSelectorRef }
+							currentMenuId={ ref }
+							clientId={ clientId }
+							onSelect={ handleSelectNavigation }
+							onCreateNew={ () => createNavigationMenu( '', [] ) }
+							/* translators: %s: The name of a menu. */
+							actionLabel={ __( "Switch to '%s'" ) }
+							showManageActions
+						/>
+					</ToolbarGroup>
+				</BlockControls>
 				<Warning>
 					{ __(
 						'Navigation menu has been deleted or is unavailable. '
@@ -698,7 +712,7 @@ function Navigation( {
 						{ __( 'Create a new menu?' ) }
 					</Button>
 				</Warning>
-			</div>
+			</TagName>
 		);
 	}
 
@@ -774,7 +788,7 @@ function Navigation( {
 							canUserDeleteNavigationMenu && (
 								<NavigationMenuDeleteControl
 									onDelete={ ( deletedMenuTitle = '' ) => {
-										createNavigationMenu( '', [] );
+										replaceInnerBlocks( clientId, [] );
 										showNavigationMenuStatusNotice(
 											sprintf(
 												// translators: %s: the name of a menu (e.g. Header navigation).
