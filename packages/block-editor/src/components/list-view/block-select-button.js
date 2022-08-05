@@ -226,19 +226,22 @@ function ListViewBlockSelectButton(
 
 				<BlockSettingsMenuControls>
 					{ ( { selectedClientId, context } ) => {
-						// This check ensures the `BlockSettingsMenuControls` fill
+						// This check ensures
+						// - the `BlockSettingsMenuControls` fill
 						// doesn't render multiple times and also that it renders for
 						// the block from which the menu was triggered.
-						// If also ensures `Rename` only appears in the ListView options.
+						// - `Rename` only appears in the ListView options.
+						// - `Rename` only appears for blocks that support renaming.
 						if (
+							! supportsBlockNaming ||
 							context !== 'list-view' ||
 							clientId !== selectedClientId
 						) {
 							return null;
 						}
+
 						return (
 							<MenuItem
-								disabled={ ! supportsBlockNaming }
 								onClick={ () => {
 									toggleLabelEditingMode( true );
 								} }
