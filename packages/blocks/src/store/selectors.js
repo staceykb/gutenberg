@@ -649,13 +649,15 @@ export function __experimentalHasBlockMetadataSupport(
 	feature,
 	defaultSupports
 ) {
-	const support = !! getBlockSupport(
+	// Either Boolean or config object.
+	const support = getBlockSupport(
 		state,
 		nameOrType,
 		'__experimentalMetadata',
 		defaultSupports
 	);
 
+	// Check for explicit Boolean (no coercion).
 	if ( support === true ) {
 		return true;
 	}

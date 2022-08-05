@@ -15,6 +15,7 @@ import {
 	isMatchingSearchTerm,
 	getCategories,
 	getActiveBlockVariation,
+	__experimentalHasBlockMetadataSupport as hasBlockMetadataSupport,
 } from '../selectors';
 
 const keyBlocksByName = ( blocks ) =>
@@ -24,6 +25,93 @@ const keyBlocksByName = ( blocks ) =>
 	);
 
 describe( 'selectors', () => {
+	describe( 'hasBlockMetadataSupport', () => {
+		const blockName = 'block/name';
+		const getState = ( blocks ) => {
+			return deepFreeze( {
+				blockTypes: keyBlocksByName( blocks ),
+			} );
+		};
+
+		it.each( [ [ false ], [ true ] ] )(
+			`returns default value when config entry not found and default set to %s`,
+			( defaultValue ) => {
+				const state = getState( [] );
+
+				expect(
+					hasBlockMetadataSupport(
+						state,
+						blockName,
+						null,
+						defaultValue
+					)
+				).toBe( defaultValue );
+			}
+		);
+
+		it( 'returns false when metadata supports set to falsy', () => {
+			const state = getState( [
+				{
+					name: blockName,
+					supports: {
+						__experimentalMetadata: false,
+					},
+				},
+			] );
+
+			expect( hasBlockMetadataSupport( state, blockName ) ).toBe( false );
+		} );
+
+		it( 'returns true when metadata supports set to truthy', () => {
+			const state = getState( [
+				{
+					name: blockName,
+					supports: {
+						__experimentalMetadata: true,
+					},
+				},
+			] );
+
+			expect( hasBlockMetadataSupport( state, blockName ) ).toBe( true );
+		} );
+
+		it( 'returns false when metadata supports feature set to falsy', () => {
+			const state = getState( [
+				{
+					name: blockName,
+					supports: {
+						__experimentalMetadata: {
+							name: false,
+							another: true,
+						},
+					},
+				},
+			] );
+
+			expect( hasBlockMetadataSupport( state, blockName, 'name' ) ).toBe(
+				false
+			);
+		} );
+
+		it( 'returns true when metadata supports feature set to true', () => {
+			const state = getState( [
+				{
+					name: blockName,
+					supports: {
+						__experimentalMetadata: {
+							name: true,
+							another: false,
+						},
+					},
+				},
+			] );
+
+			expect( hasBlockMetadataSupport( state, blockName, 'name' ) ).toBe(
+				true
+			);
+		} );
+	} );
+
 	describe( 'getBlockSupport', () => {
 		const blockName = 'block/name';
 		const getState = ( blocks ) => {
