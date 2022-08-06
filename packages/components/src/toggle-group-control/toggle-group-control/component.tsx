@@ -40,6 +40,7 @@ function ToggleGroupControl(
 	forwardedRef: ForwardedRef< any >
 ) {
 	const {
+		__nextHasNoMarginBottom = false,
 		className,
 		isAdaptiveWidth = false,
 		isBlock = false,
@@ -91,7 +92,10 @@ function ToggleGroupControl(
 		[ className, cx, isBlock, size ]
 	);
 	return (
-		<BaseControl help={ help }>
+		<BaseControl
+			help={ help }
+			__nextHasNoMarginBottom={ __nextHasNoMarginBottom }
+		>
 			<ToggleGroupControlContext.Provider
 				value={ { ...radio, isBlock: ! isAdaptiveWidth } }
 			>
