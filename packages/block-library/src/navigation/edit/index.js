@@ -210,7 +210,7 @@ function Navigation( {
 	// Attempt to retrieve and prioritize any existing navigation menu unless:
 	// - the are uncontrolled inner blocks already present in the block.
 	// - the user is creating a new menu.
-	// - there is more than 1 Navigation Post (wp_navigation).
+	// - there are no menus to choose from.
 	// This attempts to pick the first menu if there is a single Navigation Post. If more
 	// than 1 exists then no attempt to automatically pick a menu is made.
 	// The aim is for the block to "just work" from a user perspective using existing data.
@@ -231,10 +231,11 @@ function Navigation( {
 		} );
 
 		/**
-		 *  this fallback only displays (both in editor and on front)
-		 *  the best guess from existing navigation menus
-		 *  we don't want the fallback to request a save
-		 *  nor to be undoable, hence we mark it non persistent
+		 *  This fallback displays (both in editor and on front)
+		 *  a list of pages only if no menu (user assigned or
+		 *  automatically picked) is available.
+		 *  The fallback should not request a save (entity dirty state)
+		 *  nor to be undoable, hence why it is marked as non persistent
 		 */
 		__unstableMarkNextChangeAsNotPersistent();
 		setRef( navigationMenus[ 0 ].id );
@@ -731,11 +732,11 @@ function Navigation( {
 		: Placeholder;
 
 	/**
-	 * The navigation block supported Cusrtom Placeholders.
-	 * Even though the current UX tries as hard as possible to not
+	 * Historically the navigation block has supported custom placeholders.
+	 * Even though the current UX tries as hard as possible not to
 	 * end up in a placeholder state, the block continues to support
 	 * this extensibility point, via a CustomPlaceholder.
-	 * WHen CustomPlaceholder is present it becomes the default fallback
+	 * When CustomPlaceholder is present it becomes the default fallback
 	 * for an empty navigation block, instead of the default fallbacks.
 	 */
 	if ( isPlaceholder && CustomPlaceholder ) {

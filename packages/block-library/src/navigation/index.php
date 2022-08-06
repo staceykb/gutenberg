@@ -254,7 +254,7 @@ function block_core_navigation_render_submenu_icon() {
  *
  * @return WP_Post|null the first non-empty Navigation or null.
  */
-function block_core_navigation_get_most_recent_published_navigation() {
+function block_core_navigation_get_most_recently_published_navigation() {
 	// We default to the most recently created
 	$parsed_args = array(
 		'post_type'      => 'wp_navigation',
@@ -320,12 +320,11 @@ function block_core_navigation_get_fallback_blocks() {
 
 	// Default to a list of Pages.
 
-	$navigation_post = block_core_navigation_get_most_recent_published_navigation();
+	$navigation_post = block_core_navigation_get_most_recently_published_navigation();
 
 	// Prefer using the first non-empty Navigation as fallback if available.
 	if ( $navigation_post ) {
 		$maybe_fallback = block_core_navigation_filter_out_empty_blocks( parse_blocks( $navigation_post->post_content ) );
-
 
 		// Normalizing blocks may result in an empty array of blocks if they were all `null` blocks.
 		// In this case default to the (Page List) fallback.
