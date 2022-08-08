@@ -25,5 +25,5 @@
 		"html": false
 	},
 	"editorStyle": "wp-block-archives-editor",
-	"renderTemplate": "file:../archives.php"
+	"render": "file:../archives.php"
 }

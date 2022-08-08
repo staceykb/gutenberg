@@ -190,14 +190,14 @@ add_filter( 'block_type_metadata', 'gutenberg_block_type_metadata_multiple_view_
  * @return array Array of settings for registering a block type.
  */
 function gutenberg_block_type_metadata_render_template( $settings, $metadata ) {
-	if ( empty( $metadata['renderTemplate'] ) || isset( $settings['render_callback'] ) ) {
+	if ( empty( $metadata['render'] ) || isset( $settings['render_callback'] ) ) {
 		return $settings;
 	}
 
 	$template_path = wp_normalize_path(
 		realpath(
 			dirname( $metadata['file'] ) . '/' .
-			remove_block_asset_path_prefix( $metadata['renderTemplate'] )
+			remove_block_asset_path_prefix( $metadata['render'] )
 		)
 	);
 
