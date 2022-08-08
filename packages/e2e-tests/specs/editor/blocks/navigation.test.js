@@ -187,7 +187,7 @@ async function updateActiveNavigationLink( { url, label, type } ) {
 
 async function selectClassicMenu( optionText ) {
 	const dropdown = await page.waitForXPath(
-		"//*[contains(@class, 'wp-block-navigation-placeholder__actions__dropdown')]"
+		"//*[contains(@class, 'wp-block-navigation__toolbar-menu-selector')]"
 	);
 	await dropdown.click();
 	const theOption = await page.waitForXPath(
