@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import classnames from 'classnames';
+
+/**
  * WordPress dependencies
  */
 import { useEntityProp, store as coreStore } from '@wordpress/core-data';
@@ -29,17 +34,6 @@ import { store as noticesStore } from '@wordpress/notices';
 import DimensionControls from './dimension-controls';
 
 const ALLOWED_MEDIA_TYPES = [ 'image' ];
-
-const placeholder = ( content ) => {
-	return (
-		<Placeholder
-			className="block-editor-media-placeholder"
-			withIllustration={ true }
-		>
-			{ content }
-		</Placeholder>
-	);
-};
 
 function getMediaSourceUrlBySizeSlug( media, slug ) {
 	return (
@@ -95,6 +89,21 @@ function PostFeaturedImageDisplay( {
 		style: { width, height },
 	} );
 	const borderProps = useBorderProps( attributes );
+
+	const placeholder = ( content ) => {
+		return (
+			<Placeholder
+				className={ classnames(
+					'block-editor-media-placeholder',
+					borderProps.className
+				) }
+				withIllustration={ true }
+				style={ borderProps.style }
+			>
+				{ content }
+			</Placeholder>
+		);
+	};
 
 	const onSelectImage = ( value ) => {
 		if ( value?.id ) {
@@ -223,8 +232,21 @@ function PostFeaturedImageDisplay( {
 
 export default function PostFeaturedImageEdit( props ) {
 	const blockProps = useBlockProps();
+	const borderProps = useBorderProps( props.attributes );
+
 	if ( ! props.context?.postId ) {
-		return <div { ...blockProps }>{ placeholder() }</div>;
+		return (
+			<div { ...blockProps }>
+				<Placeholder
+					className={ classnames(
+						'block-editor-media-placeholder',
+						borderProps.className
+					) }
+					withIllustration={ true }
+					style={ borderProps.style }
+				/>
+			</div>
+		);
 	}
 	return <PostFeaturedImageDisplay { ...props } />;
 }
