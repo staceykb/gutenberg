@@ -6,33 +6,13 @@
  * @subpackage Webfonts
  */
 
+require_once __DIR__ . '/wp-webfonts-testcase.php';
+
 /**
  * @group  webfonts
  * @covers ::wp_register_font_family
  */
-class Tests_Webfonts_WpRegisterFontFamily extends WP_UnitTestCase {
-	/**
-	 * WP_Webfonts instance reference
-	 *
-	 * @var WP_Webfonts
-	 */
-	private $old_wp_webfonts;
-
-	public function set_up() {
-		parent::set_up();
-
-		global $wp_webfonts;
-		$this->old_wp_webfonts = $wp_webfonts;
-
-		$wp_webfonts = null;
-	}
-
-	public function tear_down() {
-		global $wp_webfonts;
-
-		$wp_webfonts = $this->old_wp_webfonts;
-		parent::tear_down();
-	}
+class Tests_Webfonts_WpRegisterFontFamily extends WP_Webfonts_TestCase {
 
 	/**
 	 * @dataProvider data_font_family_registers

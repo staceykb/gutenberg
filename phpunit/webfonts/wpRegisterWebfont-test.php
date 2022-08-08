@@ -10,25 +10,26 @@ require_once __DIR__ . '/wp-webfonts-testcase.php';
 
 /**
  * @group  webfonts
- * @covers ::wp_register_webfonts
+ * @covers ::wp_register_webfont
  */
-class Tests_Webfonts_WpRegisterWebfonts extends WP_Webfonts_TestCase {
+class Tests_Webfonts_WpRegisterWebfont extends WP_Webfonts_TestCase {
 
 	/**
 	 * Test wp_register_webfonts() bulk register webfonts.
 	 *
-	 * @dataProvider data_wp_register_webfonts
+	 * @dataProvider data_wp_register_webfont
 	 *
-	 * @covers wp_register_webfonts
+	 * @covers wp_register_webfont
 	 * @covers WP_Webfonts::add
 	 * @covers WP_Webfonts::add_variation
 	 *
-	 * @param array $webfonts Array of webfonts to test.
-	 * @param array $expected Expected results.
+	 * @param string $expected    Expected results.
+	 * @param array  $variation   Web font to test.
+	 * @param string $font_family Optional. Font family for this variation.
 	 */
-	public function test_wp_register_webfonts( array $webfonts, array $expected ) {
-		$this->assertSame( $expected['wp_register_webfonts'], wp_register_webfonts( $webfonts ), 'Font family handle(s) should be returned' );
-		$this->assertSame( $expected['get_registered'], wp_webfonts()->get_registered(), 'Web fonts should match registered queue' );
+	public function test_wp_register_webfont( $expected, array $variation, $font_family = '' ) {
+		$this->assertSame( $expected, wp_register_webfont( $variation, $font_family ), 'Font family handle should be returned' );
+		$this->assertSame( $expected, wp_webfonts()->get_registered(), 'Web fonts should match registered queue' );
 		$this->assertSame( array(), wp_webfonts()->get_enqueued(), 'No web fonts should be enqueued' );
 	}
 
@@ -37,7 +38,7 @@ class Tests_Webfonts_WpRegisterWebfonts extends WP_Webfonts_TestCase {
 	 *
 	 * @return array[]
 	 */
-	public function data_wp_register_webfonts() {
+	public function data_wp_register_webfont() {
 		return array(
 			'font family not keyed' => array(
 				'webfonts' => array(
