@@ -17,6 +17,12 @@ if ( class_exists( 'WP_Style_Engine_CSS_Declarations' ) ) {
  * @access private
  */
 class WP_Style_Engine_CSS_Declarations {
+	/**
+	 * An array of valid CSS custom properties.
+	 */
+	const VALID_CUSTOM_PROPERTIES = array(
+		'--wp--style--unstable-gallery-gap',
+	);
 
 	/**
 	 * An array of CSS declarations (property => value pairs).
@@ -38,27 +44,6 @@ class WP_Style_Engine_CSS_Declarations {
 			return;
 		}
 		$this->add_declarations( $declarations );
-
-		// @TODO: This should be removed when and if safecss_filter_attr() in wp-includes/kses.php allows CSS custom properties.
-		if ( ! has_filter( 'safe_style_css', array( __CLASS__, 'safe_style_css_allow_wp_custom_property_filter' ) ) ) {
-			add_filter( 'safe_style_css', array( __CLASS__, 'safe_style_css_allow_wp_custom_property_filter' ), 10, 1 );
-		}
-	}
-
-	/**
-	 * Update allowed inline style attributes list.
-	 * We can then use this to run
-	 *
-	 * @TODO: This should be removed when and if safecss_filter_attr() in wp-includes/kses.php allows CSS custom properties.
-	 *
-	 * @param string[] $attrs Array of allowed CSS attributes.
-	 * @return string[] CSS attributes.
-	 */
-	public static function safe_style_css_allow_wp_custom_property_filter( $attrs ) {
-		// A single CSS custom property used in place of incoming `---wp--*` properties.
-		// The goal is to use it to run `---wp--*: {$value}` through safecss_filter_attr().
-		$attrs[] = '--wp--custom-property';
-		return $attrs;
 	}
 
 	/**
@@ -146,10 +131,7 @@ class WP_Style_Engine_CSS_Declarations {
 	protected static function filter_declaration( $property, $value, $spacer = '' ) {
 		if ( isset( $property ) && isset( $value ) ) {
 			// Allow CSS custom properties starting with `--wp--`.
-			// Run a generic CSS string through `safecss_filter_attr`'s value checks.
-			// @TODO: This should be removed when and if safecss_filter_attr() in wp-includes/kses.php allows CSS custom properties.
-			if ( 0 === strpos( $property, '--wp--' ) && ! empty( safecss_filter_attr( "--wp--custom-property:{$spacer}{$value}" ) ) ) {
-				// The property has already been sanitized by $this->sanitize_property().
+			if ( in_array( $property, static::VALID_CUSTOM_PROPERTIES, true ) ) {
 				return "{$property}:{$spacer}{$value}";
 			}
 			return safecss_filter_attr( "{$property}:{$spacer}{$value}" );
