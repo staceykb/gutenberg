@@ -149,14 +149,34 @@ class WP_Style_Engine_CSS_Declarations_Test extends WP_UnitTestCase {
 	 */
 	public function test_remove_unsafe_properties_and_values() {
 		$input_declarations = array(
-			'color'        => '<red/>',
+			'color'        => 'url("https://wordpress.org")',
 			'margin-right' => '10em',
 			'potato'       => 'uppercase',
 		);
 		$css_declarations   = new WP_Style_Engine_CSS_Declarations( $input_declarations );
 
 		$this->assertSame(
-			'color:&lt;red/&gt;;margin-right:10em;',
+			'margin-right:10em;',
+			$css_declarations->get_declarations_string()
+		);
+	}
+
+	/**
+	 * Should allow --wp--* CSS custom properties.
+	 */
+	public function test_allow_wp_custom_properties() {
+		$input_declarations = array(
+			'--wp--love-your-work'                => 'url("https://wordpress.org")',
+			'--large-font-size'                   => '10em',
+			'--wp-yeah-nah'                       => '100%',
+			'--wp--preset--here-is-a-potato'      => '88px',
+			'--wp--style--/::target-[<nonsense>]' => '2000.75em',
+			'--wp--style--block-gap'              => '2em',
+		);
+		$css_declarations   = new WP_Style_Engine_CSS_Declarations( $input_declarations );
+
+		$this->assertSame(
+			'--wp--preset--here-is-a-potato:88px;--wp--style--target-nonsense:2000.75em;--wp--style--block-gap:2em;',
 			$css_declarations->get_declarations_string()
 		);
 	}

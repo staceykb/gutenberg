@@ -38,6 +38,27 @@ class WP_Style_Engine_CSS_Declarations {
 			return;
 		}
 		$this->add_declarations( $declarations );
+
+		// @TODO: This should be removed when and if safecss_filter_attr() in wp-includes/kses.php allows CSS custom properties.
+		if ( ! has_filter( 'safe_style_css', array( __CLASS__, 'safe_style_css_allow_wp_custom_property_filter' ) ) ) {
+			add_filter( 'safe_style_css', array( __CLASS__, 'safe_style_css_allow_wp_custom_property_filter' ), 10, 1 );
+		}
+	}
+
+	/**
+	 * Update allowed inline style attributes list.
+	 * We can then use this to run
+	 *
+	 * @TODO: This should be removed when and if safecss_filter_attr() in wp-includes/kses.php allows CSS custom properties.
+	 *
+	 * @param string[] $attrs Array of allowed CSS attributes.
+	 * @return string[] CSS attributes.
+	 */
+	public static function safe_style_css_allow_wp_custom_property_filter( $attrs ) {
+		// A single CSS custom property used in place of incoming `---wp--*` properties.
+		// The goal is to use it to run `---wp--*: {$value}` through safecss_filter_attr().
+		$attrs[] = '--wp--custom-property';
+		return $attrs;
 	}
 
 	/**
@@ -114,6 +135,29 @@ class WP_Style_Engine_CSS_Declarations {
 	}
 
 	/**
+	 * Filters a CSS property + value pair.
+	 *
+	 * @param string $property The CSS property.
+	 * @param string $value    The value to be filtered.
+	 * @param string $spacer   The spacer between the colon and the value. Defaults to an empty string.
+	 *
+	 * @return string The filtered declaration as a single string.
+	 */
+	protected static function filter_declaration( $property, $value, $spacer = '' ) {
+		if ( isset( $property ) && isset( $value ) ) {
+			// Allow CSS custom properties starting with `--wp--`.
+			// Run a generic CSS string through `safecss_filter_attr`'s value checks.
+			// @TODO: This should be removed when and if safecss_filter_attr() in wp-includes/kses.php allows CSS custom properties.
+			if ( 0 === strpos( $property, '--wp--' ) && ! empty( safecss_filter_attr( "--wp--custom-property:{$spacer}{$value}" ) ) ) {
+				// The property has already been sanitized by $this->sanitize_property().
+				return "{$property}:{$spacer}{$value}";
+			}
+			return safecss_filter_attr( "{$property}:{$spacer}{$value}" );
+		}
+		return '';
+	}
+
+	/**
 	 * Filters and compiles the CSS declarations.
 	 *
 	 * @param boolean $should_prettify Whether to add spacing, new lines and indents.
@@ -130,7 +174,7 @@ class WP_Style_Engine_CSS_Declarations {
 
 		foreach ( $declarations_array as $property => $value ) {
 			$spacer               = $should_prettify ? ' ' : '';
-			$filtered_declaration = esc_html( safecss_filter_attr( "{$property}:{$spacer}{$value}" ) );
+			$filtered_declaration = static::filter_declaration( $property, $value, $spacer );
 			if ( $filtered_declaration ) {
 				$declarations_output .= "{$indent}{$filtered_declaration};$suffix";
 			}
